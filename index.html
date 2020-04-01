@@ -18,85 +18,50 @@
     <meta property="og:image" content=""/>
   
 
+  <link href="/favicon.png" rel="icon">
   <link rel="alternate" href="/atom.xml" title="杜文杰" type="application/atom+xml">
   <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
   <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-
-  <!-- favicon -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <!-- Font-Awesome -->
-  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  
 
 <meta name="generator" content="Hexo 4.2.0"></head>
 
-<body>
-  <header id="header"><div class= "header-content inner">
-	<div class = "alignleft col-one">
-		
-			<div class='avatar'>
-				<img src = "/img/default/avatar.png">
-              </div>
-		
-		<div class="header-div">
-		    <h1><a href="/">杜文杰</a></h1>
-		    <h2><a href="/"></a></h2>
-		</div>
-	</div>
-	<div class = "alignright col-two">
-		
-	</div>
-	<div class="clearfix"></div>
-</div>
 
-<div class= "header-nav">
-	<div class='header-nav-content inner'>
-		<div id="main-nav" class="alignleft">
-		    		
-		    		  <a href="/"><i class="fa fa-home"></i>Home</a>
-		    		
-		    		  <a href="/archives"><i class="fa fa-archive"></i>Archives</a>
-		    		
-		    		  <a href="/node"><i class="fa fa-book"></i>Node.js</a>
-		    		
-		    		  <a href="/hexo"><i class="fa fa-book"></i>Books</a>
-		    		
-		</div>
-		<div id="sub-nav" class="alignright">
-		    
-		      <a href="/atom.xml"><i class="fa fa-rss"></i>Rss</a>
-		    
-		      <a href="/customization"><i class="fa fa-question-circle"></i>Customization</a>
-		    
-		      <a href="/about"><i class="fa fa-user"></i>About</a>
-		    
-		</div>
-	</div>
-	<div class="clearfix"></div>
+<body>
+  <header id="header"><div class="meta inner">
+  <h1><a href="/">杜文杰</a></h1>
+  <h2><a href="/"></a></h2>
+  <nav id="main-nav">
+    <ul>
+      
+      <li><a href="/about">About</a></li>
+      
+      <li><a href="/archives">Archives</a></li>
+      
+      <li><a href="/atom.xml">RSS</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
 </div>
+<div class="clearfix"></div>
 </header>
-    <div id="content" class="inner">
-      <div id="main-col" class="alignleft"><div id="wrapper">
-    <article class="post">
-  
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
   <div class="post-content">
     <header>
-        <div class="icon"></div>
-        
-        <time datetime="2018-05-25T14:54:50.000Z"><a href="/2018/05/25/tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入/">2018-05-25</a></time>
-        
+      
   
     <h1 class="title"><a href="/2018/05/25/tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入/">tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入</a></h1>
   
 
+      
+        <time datetime="2018-05-25T14:54:50.000Z">2018-05-25</time>
+      
     </header>
-
     <div class="entry">
       
-        
-    <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#需求："><span class="toc-text">需求：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#理想情况下的做法："><span class="toc-text">理想情况下的做法：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到问题："><span class="toc-text">遇到问题：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#猜测："><span class="toc-text">猜测：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#尝试："><span class="toc-text">尝试：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决："><span class="toc-text">解决：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#再验证："><span class="toc-text">再验证：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#再猜测："><span class="toc-text">再猜测：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最后结论："><span class="toc-text">最后结论：</span></a>
-    </div>
-
         <h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h3><p>香蕉球APP的tabBar本来一共有5个，由于战略原因，tabBar中的“活动中心” 需要动态由后台配置决定是否显示。</p>
 <p><img src="https://s1.ax1x.com/2018/05/25/Cf62jO.jpg" alt="1"></p>
 <h3 id="理想情况下的做法："><a href="#理想情况下的做法：" class="headerlink" title="理想情况下的做法："></a>理想情况下的做法：</h3><p>1，获取当前tabBarVC中的所有子VC，得到一个数组 mutArr。</p>
@@ -133,42 +98,33 @@
 
       
     </div>
-    <footer>
       
         
         
       
       <div class="clearfix"></div>
-    </footer>
+      </footer>
   </div>
 </article>
-<!-- 返回顶部 -->
-<div id="toTop">
-	<a href="#">▲</a>
-	<a href="#footer">▼</a>
-</div>
 
-    <article class="post">
-  
+
+
+
+
+  <article class="post">
   <div class="post-content">
     <header>
-        <div class="icon"></div>
-        
-        <time datetime="2017-08-02T09:09:16.000Z"><a href="/2017/08/02/aboutIAP/">2017-08-02</a></time>
-        
+      
   
     <h1 class="title"><a href="/2017/08/02/aboutIAP/">关于APP内购的一点实战经验之谈</a></h1>
   
 
+      
+        <time datetime="2017-08-02T09:09:16.000Z">2017-08-02</time>
+      
     </header>
-
     <div class="entry">
       
-        
-    <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要做内购"><span class="toc-text">为什么要做内购</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#划重点"><span class="toc-text">划重点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#协议、税务和银行业务"><span class="toc-text">协议、税务和银行业务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建APP内购买项目"><span class="toc-text">创建APP内购买项目</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代码集成"><span class="toc-text">代码集成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#添加测试账号"><span class="toc-text">添加测试账号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#测试遇到的问题及解决"><span class="toc-text">测试遇到的问题及解决</span></a></li></ol></li></ol></li></ol>
-    </div>
-
         <p>内购上线已经一个多月了，一直没有时间做一个总结，因为之后立马又有两个项目要做，现在闲下来，回忆一下内购路上的一些错误认识，避免其他人进坑。关于iap的文章一搜一大把，这里推荐<a href="http://www.jianshu.com/u/6aba5654805e" target="_blank" rel="noopener">走在路上的小菜鸟</a> <a href="http://www.jianshu.com/p/847edcb1488e" target="_blank" rel="noopener">《iOS Apple内购及掉单问题》</a>的一片文章，算是比较到位的，demo的话推荐<a href="https://github.com/YZQ-Nine" target="_blank" rel="noopener">YZQ_Nine</a>的<a href="https://github.com/YZQ-Nine/IAPDemo" target="_blank" rel="noopener">IAPDemo</a>，所以下面的内容就是以这个demo和《iOS Apple内购及掉单问题》为出发点慢慢说来，关于文章中没有提到的以及demo中的优缺点我下面会讲，陋识拙见，姑且言之，姑且听之。</p>
 <hr>
 <h2 id="为什么要做内购"><a href="#为什么要做内购" class="headerlink" title="为什么要做内购"></a>为什么要做内购</h2><p>因为博主做的是直播APP，第一版上架是没打算做充值的，打算先上了再说，然而由于是虚拟货币交易，苹果告知必须走内购路线否则不能上架，你有什么办法呢，默默听话叫爸爸，还得30%过路费。</p>
@@ -198,82 +154,64 @@
 
       
     </div>
-    <footer>
       
         
         
       
       <div class="clearfix"></div>
-    </footer>
+      </footer>
   </div>
 </article>
-<!-- 返回顶部 -->
-<div id="toTop">
-	<a href="#">▲</a>
-	<a href="#footer">▼</a>
-</div>
 
-    <article class="post">
-  
+
+
+
+
+  <article class="post">
   <div class="post-content">
     <header>
-        <div class="icon"></div>
-        
-        <time datetime="2017-06-16T07:37:22.000Z"><a href="/2017/06/16/iOS工程中使用自定义文字/">2017-06-16</a></time>
-        
+      
   
     <h1 class="title"><a href="/2017/06/16/iOS工程中使用自定义文字/">iOS工程中使用自定义文字</a></h1>
   
 
+      
+        <time datetime="2017-06-16T07:37:22.000Z">2017-06-16</time>
+      
     </header>
-
     <div class="entry">
       
-        
-    <div id="toc">
-        
-    </div>
-
         <p>1，把.ttf字体文件拖拽进工程<br>2，在info.plist中添加 Fonts provided by application：ziti.ttf<br>3,在build Phase 中 Copy Bundle Resources</p>
 
       
     </div>
-    <footer>
       
         
         
       
       <div class="clearfix"></div>
-    </footer>
+      </footer>
   </div>
 </article>
-<!-- 返回顶部 -->
-<div id="toTop">
-	<a href="#">▲</a>
-	<a href="#footer">▼</a>
-</div>
 
-    <article class="post">
-  
+
+
+
+
+  <article class="post">
   <div class="post-content">
     <header>
-        <div class="icon"></div>
-        
-        <time datetime="2017-06-16T02:05:16.000Z"><a href="/2017/06/16/如何使用hexo新建一篇博客/">2017-06-16</a></time>
-        
+      
   
     <h1 class="title"><a href="/2017/06/16/如何使用hexo新建一篇博客/">如何使用hexo新建一篇博客</a></h1>
   
 
+      
+        <time datetime="2017-06-16T02:05:16.000Z">2017-06-16</time>
+      
     </header>
-
     <div class="entry">
       
-        
-    <div id="toc">
-        
-    </div>
-
         <p>1,</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cd 进入HEXO文件夹</span><br></pre></td></tr></table></figure>
 
@@ -291,42 +229,33 @@ category: &quot;随笔bug</code></pre><p>4, 将Markdown生成静态网页文件<
 
       
     </div>
-    <footer>
       
         
         
       
       <div class="clearfix"></div>
-    </footer>
+      </footer>
   </div>
 </article>
-<!-- 返回顶部 -->
-<div id="toTop">
-	<a href="#">▲</a>
-	<a href="#footer">▼</a>
-</div>
 
-    <article class="post">
-  
+
+
+
+
+  <article class="post">
   <div class="post-content">
     <header>
-        <div class="icon"></div>
-        
-        <time datetime="2017-05-23T07:43:26.000Z"><a href="/2017/05/23/我的第一篇博客/">2017-05-23</a></time>
-        
+      
   
     <h1 class="title"><a href="/2017/05/23/我的第一篇博客/">我的第一篇博客</a></h1>
   
 
+      
+        <time datetime="2017-05-23T07:43:26.000Z">2017-05-23</time>
+      
     </header>
-
     <div class="entry">
       
-        
-    <div id="toc">
-        
-    </div>
-
         <p>&ensp; &ensp; 看到一些大牛都有了自己的个人网站博客，心里十分的痒痒，从在大学的时候就想搞了，无奈一直到现在。趁着工作之余，又有了闲情雅致，就忍不住搞了一波。</p>
 <ul>
 <li><p>&ensp; &ensp;  首先去万网购买了一个域名，查询<a href="www.duwenjie.com">www.duwenjie.com</a>一看,被甜到了，秀恩爱的程序员。阔怕。。。<br><img src="/MoonSoilWj.github.io/2017/05/24/2E622CF5-BB73-461C-8CD5-ED239F5CBFE2.png" alt=""><br>问题是这并不是我…,然后我就买了<a href="du-wenjie.co">du-wenjie.com</a>]这个域名。</p>
@@ -346,131 +275,98 @@ category: &quot;随笔bug</code></pre><p>4, 将Markdown生成静态网页文件<
 
       
     </div>
-    <footer>
       
         
         
       
       <div class="clearfix"></div>
-    </footer>
+      </footer>
   </div>
 </article>
-<!-- 返回顶部 -->
-<div id="toTop">
-	<a href="#">▲</a>
-	<a href="#footer">▼</a>
-</div>
- 
+
+
+
+
+
+
 <nav id="pagination">
   
   
   <div class="clearfix"></div>
-</nav>
-</div></div>
-      <aside id="sidebar" class="alignright">
-        
-          
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:du-wenjie.com">
+  </form>
+</div>
+
+  
 <div class="widget tag">
-  <h3 class="title" id="categories">Categories</h3>
-     <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C/">开发经验</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94bug/">随笔bug</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94%E8%AE%B0%E5%BD%95/">随笔记录</a><span class="category-list-count">1</span></li></ul> 
+  <h3 class="title">Recent Posts</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2018/05/25/tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入/">tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入</a>
+      </li>
+    
+      <li>
+        <a href="/2017/08/02/aboutIAP/">关于APP内购的一点实战经验之谈</a>
+      </li>
+    
+      <li>
+        <a href="/2017/06/16/iOS工程中使用自定义文字/">iOS工程中使用自定义文字</a>
+      </li>
+    
+      <li>
+        <a href="/2017/06/16/如何使用hexo新建一篇博客/">如何使用hexo新建一篇博客</a>
+      </li>
+    
+      <li>
+        <a href="/2017/05/23/我的第一篇博客/">我的第一篇博客</a>
+      </li>
+    
+  </ul>
 </div>
- 
-
-        
-          <div class="widget tag">
-  <h3 class="title">微信公众账号</h3>
-    <ul class="entry">
-      <img src="/img/default/qrcode.jpg" alt="欢迎关注个人公众账号" style= "width: 100%">
-    </ul>
-</div>
-        
-          <div class="widget tag">
-  <h3 class="title">Calendar</h3>
-  <div id="calendar"></div>
-</div>
-
-        
-          
-  <div class="widget tag">
-    <h3 class="title">友情链接</h3>
-      <ul class="entry">
-        
-          <li class='link'><a href='http://xiaoyun.farbox.com' target="_blank" rel="noopener">晓晓博客</a></li>
-        
-          <li class='link'><a href='http://www.ituring.com.cn/users/136808' target="_blank" rel="noopener">图灵社区</a></li>
-        
-      </ul>
-  </div>
 
 
-        
-          
-  <div class="widget tag">
-    <h3 class="title">归档</h3>
-	<ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">公元 2018 年</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/">公元 2017 年</a><span class="archive-list-count">4</span></li></ul>
-  </div>
-
-        
-      </aside>
-      <div class="clearfix"></div>
-    </div>
-  <footer id="footer"><div class="footer-content inner">
-  <div class="alignleft">
   
-    &copy; 2020 杜文杰
-    
-  </div>
-  <div class="alignright">
-    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme
-    <a href="https://github.com/pengloo53/Hexo-theme-light_cn" target="_blank" rel="noopener">light_cn</a>
-  </div>
-
-  <div>
-    Hosted by <a href="https://pages.coding.me" target="_blank" rel="noopener" style="font-weight: bold">Coding Pages</a>
-  </div>
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
   
-  <div class="clearfix"></div>
-</div></footer>
-  <script src="/js/jquery.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-
-<!-- calendar widget -->
-
-  <script src="/js/calendar.js"></script>
-  <script src="/js/languages.js"></script>
-  <script type="text/javascript">
-    $(function() {
-    
-      $('#calendar').aCalendar('zh-CN',{single:, root:'calendar'});
-    
-    });
-  </script>
+    <li><a href="/categories/开发经验/">开发经验</a><small>2</small></li>
+  
+    <li><a href="/categories/随笔bug/">随笔bug</a><small>2</small></li>
+  
+    <li><a href="/categories/随笔记录/">随笔记录</a><small>1</small></li>
+  
+  </ul>
+</div>
 
 
-<!-- 百度统计 -->
+  
+<div class="widget tagcloud">
+  <h3 class="title">Tag Cloud</h3>
+  <div class="entry">
+    <a href="/tags/App%E5%86%85%E8%B4%AD/" style="font-size: 10px;">App内购</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E4%BD%93/" style="font-size: 10px;">iOS自定义字体</a> <a href="/tags/iap/" style="font-size: 10px;">iap</a> <a href="/tags/next/" style="font-size: 10px;">next</a> <a href="/tags/obejct-C/" style="font-size: 10px;">obejct-C</a> <a href="/tags/tabBar/" style="font-size: 10px;">tabBar</a> <a href="/tags/ttf/" style="font-size: 10px;">ttf</a> <a href="/tags/%E4%B8%87%E7%BD%91%E7%94%B3%E8%AF%B7/" style="font-size: 10px;">万网申请</a> <a href="/tags/%E9%83%A8%E7%BD%B2hexo/" style="font-size: 10px;">部署hexo</a>
+  </div>
+</div>
 
-	<script>
-	var _hmt = _hmt || [];
-	(function() {
-	  var hm = document.createElement("script");
-	  hm.src = "//hm.baidu.com/hm.js?9acf0cedd48dc53be256ede5a98c2aaa";
-	  var s = document.getElementsByTagName("script")[0]; 
-	  s.parentNode.insertBefore(hm, s);
-	})();
-	</script>
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2020 杜文杰
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
-
-<!-- fancybox -->
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-(function($){
-  $('.fancybox').fancybox();
-})(jQuery);
-</script>
 
 
 </body>
 </html>
+
