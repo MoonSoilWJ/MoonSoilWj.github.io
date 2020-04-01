@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="iOS 开发者 do something for you">
+    <meta name="description" content="">
     <meta name="keyword"  content="">
     <link rel="shortcut icon" href="/img/ironman-draw.png">
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          如何使用hexo新建一篇博客 - undefined
+          如何使用hexo新建一篇博客 - 杜文杰 | Blog
         
     </title>
 
@@ -87,7 +87,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('')
+            background-image: url('/img/article_header/article_bg.jpg')
             /*post*/
         
     }
@@ -275,6 +275,11 @@ category: &quot;随笔bug</code></pre><p>4, 将Markdown生成静态网页文件<
                 <br>
                 <!--分享-->
                 
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
                 <!--分享-->
                 <br>                       
                 
@@ -309,8 +314,27 @@ category: &quot;随笔bug</code></pre><p>4, 将Markdown生成静态网页文件<
 
                 <!-- Featured Tags -->
                 
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#hexo" title="hexo">hexo</a>
+                        
+                          <a class="tag" href="/tags/#部署hexo" title="部署hexo">部署hexo</a>
+                        
+                    </div>
+                </section>
+                
 
                 <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
                 
             </div>
         </div>
@@ -323,6 +347,40 @@ category: &quot;随笔bug</code></pre><p>4, 将Markdown生成静态网页文件<
 
 
 
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
 <!-- chrome Firefox 中文锚点定位失效-->
@@ -359,6 +417,15 @@ category: &quot;随笔bug</code></pre><p>4, 将Markdown生成静态网页文件<
 
                 
 
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/MoonSoilWJ">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
                 
 
                 
@@ -456,9 +523,39 @@ category: &quot;随笔bug</code></pre><p>4, 将Markdown生成静态网页文件<
 <!-- Google Analytics -->
 
 
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
 
 
 <!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
 
 
 
