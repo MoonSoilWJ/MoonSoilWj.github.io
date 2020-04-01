@@ -1,372 +1,613 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
 <head>
-  <meta charset="utf-8">
-  
-  <title>杜文杰</title>
-  <meta name="author" content="杜文杰">
-  
-  <meta name="description" content="iOS 开发者 do something for you">
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="iOS 开发者 do something for you">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          
+        
+    </title>
 
-  
-  <meta property="og:site_name" content="杜文杰"/>
+    <link rel="canonical" href="http://du-wenjie.com/">
 
-  
-    <meta property="og:image" content=""/>
-  
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
 
-  <link href="/favicon.png" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="杜文杰" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
-  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  
 
+    <!-- Custom CSS --> 
+    
+<link rel="stylesheet" href="/css/beantech.min.css">
+
+
+    
+<link rel="stylesheet" href="/css/donate.css">
+
+    
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    
+<link rel="stylesheet" href="/css/widget.css">
+
+
+    
+<link rel="stylesheet" href="/css/rocket.css">
+
+
+    
+<link rel="stylesheet" href="/css/signature.css">
+
+
+    
+<link rel="stylesheet" href="/css/toc.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
 <meta name="generator" content="Hexo 4.2.0"></head>
 
 
-<body>
-  <header id="header"><div class="meta inner">
-  <h1><a href="/">杜文杰</a></h1>
-  <h2><a href="/"></a></h2>
-  <nav id="main-nav">
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('') 
+            /*config*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="site-heading">
+                        <h1>杜文杰</h1>
+                        <!--<hr class="small">-->
+                        <span class="subheading"></span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">杜文杰</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/resume/">Hey,It&#39;s me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/categories/">分类</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Main Content -->
+<div class="container">
+    <div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                post-container
+            ">
+            
+                <!-- Main Content -->
+
+
+<div class="post-preview">
+
+    <a href="/2018/05/25/tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入/">
+        <h2 class="post-title">
+                                 
+            tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            需求：香蕉球APP的tabBar本来一共有5个，由于战略原因，tabBar中的“活动中心” 需要动态由后台配置决定是否显示。
+
+理想情况下的做法：1，获取当前tabBarVC中的所有子VC，得到一个数组 mutArr。
+2，根据后台返回的bool值activityCenterOpen，ture为显示，false为隐藏。
+3，（1），若为false，判断mutArr是否包含“活动中心”的VC，......
+        </div>
+    </a>
+    
+        <p class="post-meta">
+            Posted by 杜文杰 on
+            2018-05-25
+        </p>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/08/02/aboutIAP/">
+        <h2 class="post-title">
+                                 
+            关于APP内购的一点实战经验之谈
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            内购上线已经一个多月了，一直没有时间做一个总结，因为之后立马又有两个项目要做，现在闲下来，回忆一下内购路上的一些错误认识，避免其他人进坑。关于iap的文章一搜一大把，这里推荐走在路上的小菜鸟 《iOS Apple内购及掉单问题》的一片文章，算是比较到位的，demo的话推荐YZQ_Nine的IAPDemo，所以下面的内容就是以这个demo和《iOS Apple内购及掉单问题》为出发点慢慢说来，......
+        </div>
+    </a>
+    
+        <p class="post-meta">
+            Posted by 杜文杰 on
+            2017-08-02
+        </p>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/06/16/iOS工程中使用自定义文字/">
+        <h2 class="post-title">
+                                 
+            iOS工程中使用自定义文字
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            1，把.ttf字体文件拖拽进工程2，在info.plist中添加 Fonts provided by application：ziti.ttf3,在build Phase 中 Copy Bundle Resources
+...
+        </div>
+    </a>
+    
+        <p class="post-meta">
+            Posted by 杜文杰 on
+            2017-06-16
+        </p>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/06/16/如何使用hexo新建一篇博客/">
+        <h2 class="post-title">
+                                 
+            如何使用hexo新建一篇博客
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            1,
+1$ cd 进入HEXO文件夹
+
+2,
+1$ hexo new &quot;如何使用hexo新建一片博客&quot;
+
+3, 编辑文档  
+tags: [hexo,部署hexo]  
+category: &quot;随笔bug4, 将Markdown生成静态网页文件
+1$ hexo generate
+5, 部署到Github
+$ hexo deploy6，GitHub desktop ......
+        </div>
+    </a>
+    
+        <p class="post-meta">
+            Posted by 杜文杰 on
+            2017-06-16
+        </p>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/05/23/我的第一篇博客/">
+        <h2 class="post-title">
+                                 
+            我的第一篇博客
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            &ensp; &ensp; 看到一些大牛都有了自己的个人网站博客，心里十分的痒痒，从在大学的时候就想搞了，无奈一直到现在。趁着工作之余，又有了闲情雅致，就忍不住搞了一波。
+
+&ensp; &ensp;  首先去万网购买了一个域名，查询www.duwenjie.com一看,被甜到了，秀恩爱的程序员。阔怕。。。问题是这并不是我…,然后我就买了du-wenjie.com]这个域名。
+
+接下来是买虚......
+        </div>
+    </a>
+    
+        <p class="post-meta">
+            Posted by 杜文杰 on
+            2017-05-23
+        </p>
+    
+
+</div>
+<hr>
+
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+    
+</ul>
+
+
+
+                <br>
+
+                <!-- require APlayer -->
+                
+
+                <!-- 如果开启评论功能 -->
+                
+            </div>
+
+          <!-- Sidebar Container -->
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+        <!-- Featured Tags -->
+
+        <hr>
+    
+        <!-- Short About -->
+<section class="visible-md visible-lg">
+    <h5><a href="/about/">ABOUT ME</a></h5>
+    <div class="short-about">
+
+        
+
+        
+
+        <!-- SNS Link -->
+        <ul class="list-inline">
+            
+            
+            
+
+            
+
+            
+
+            
+            
+            
+            
+        </ul>
+    </div>
+</section>
+
+        <hr>
+    
+        
+  <h5>RECENT POSTS</h3>
+  <div class="widget">
     <ul>
       
-      <li><a href="/about">About</a></li>
+        <li>
+          <a href="/2018/05/25/tabBar%E4%B8%AD%E5%8A%A8%E6%80%81%E6%8F%92%E5%85%A5tabBarItem%E7%9A%84trick%EF%BC%8C%E5%B9%B6%E7%94%B1%E6%AD%A4%E5%BC%95%E5%8F%91%E7%9A%84%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%B7%B1%E5%85%A5/">tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入</a>
+        </li>
       
-      <li><a href="/archives">Archives</a></li>
+        <li>
+          <a href="/2017/08/02/aboutIAP/">关于APP内购的一点实战经验之谈</a>
+        </li>
       
-      <li><a href="/atom.xml">RSS</a></li>
+        <li>
+          <a href="/2017/06/16/iOS%E5%B7%A5%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%87%E5%AD%97/">iOS工程中使用自定义文字</a>
+        </li>
+      
+        <li>
+          <a href="/2017/06/16/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8hexo%E6%96%B0%E5%BB%BA%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">如何使用hexo新建一篇博客</a>
+        </li>
+      
+        <li>
+          <a href="/2017/05/23/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">我的第一篇博客</a>
+        </li>
       
     </ul>
-    <div class="clearfix"></div>
-  </nav>
-</div>
-<div class="clearfix"></div>
-</header>
-  <div id="content" class="inner">
-    <div id="main-col" class="alignleft"><div id="wrapper">
-  <article class="post">
-  <div class="post-content">
-    <header>
-      
-  
-    <h1 class="title"><a href="/2018/05/25/tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入/">tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入</a></h1>
-  
+  </div>
 
-      
-        <time datetime="2018-05-25T14:54:50.000Z">2018-05-25</time>
-      
-    </header>
-    <div class="entry">
-      
-        <h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h3><p>香蕉球APP的tabBar本来一共有5个，由于战略原因，tabBar中的“活动中心” 需要动态由后台配置决定是否显示。</p>
-<p><img src="https://s1.ax1x.com/2018/05/25/Cf62jO.jpg" alt="1"></p>
-<h3 id="理想情况下的做法："><a href="#理想情况下的做法：" class="headerlink" title="理想情况下的做法："></a>理想情况下的做法：</h3><p>1，获取当前tabBarVC中的所有子VC，得到一个数组 mutArr。</p>
-<p>2，根据后台返回的bool值activityCenterOpen，ture为显示，false为隐藏。</p>
-<p>3，（1），若为false，判断mutArr是否包含“活动中心”的VC，包含 则将“活动中心VC”从mutArr中删除。<br>   （2），若为true，判断mutArr是否包含“活动中心”的VC，不包含 则将“活动中心VC”插入到这个mutArr数组，index为2。</p>
-<p>4，调用<br><code>self.tabBarController.viewControllers = mutArr;</code><br>则完成动态配置要求。</p>
-<h3 id="遇到问题："><a href="#遇到问题：" class="headerlink" title="遇到问题："></a>遇到问题：</h3><p>执行前面3,(1)的时候是没有问题的，能成功将“活动中心”从tabBar中删除，<br>然而在3,(2)的时候要将”活动中心“插入到tabBar的第三个的时候，实际显示确实这样的：<br><img src="https://s1.ax1x.com/2018/05/25/Cf6fDe.jpg" alt="2"></p>
-<p>没错！活动中心被加在了最后一个item上了。<br>通过调试 发现mutArr中的各个VC的顺序，并没有改变，“活动中心VC”在数组中位置就是index=2，没有问题。</p>
-<h3 id="猜测："><a href="#猜测：" class="headerlink" title="猜测："></a>猜测：</h3><p>面对这样的结果，只能猜测tabBarVC在重置viewControllers的时候是不管mutArr中的顺序的，而是先判断即将设置的VC是否在当前的VCs        里面，若有之前已经存在过，则不再添加，若是不存在就将新的VC设置在最右边显示。也就是说 self.tabBarController.viewControllers = mutArr; 并不是真正的重置！</p>
-<h3 id="尝试："><a href="#尝试：" class="headerlink" title="尝试："></a>尝试：</h3><p>通过这样的猜测，已经可以想象到解决方案了，那就是在插入VC的时候，先把之前的都去掉，再重新复制，即，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self.tabBarController.viewControllers &#x3D; @[];</span><br><span class="line">self.tabBarController.viewControllers &#x3D; mutArr;</span><br></pre></td></tr></table></figure>
+        <hr>
+    
+        <!-- Friends Blog -->
 
-<p> 结果只是第一行代码起了作用，也就是tabBarItem全部移除了。</p>
-<p>   没有道理。莫非是先把VCs设置为空数组之后，就不能更改了？ 后来将代码改成</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mutVCs insertObject:nav atIndex:2];</span><br><span class="line"> NSArray *arr1 &#x3D; [mutVCs subarrayWithRange:NSMakeRange(0, 1)];</span><br><span class="line">self.tabBarController.viewControllers &#x3D; arr1;</span><br><span class="line">self.tabBarController.viewControllers &#x3D; mutVCs;</span><br></pre></td></tr></table></figure>
-<p>结果依然是第一行代码起作用，第二行没有设置上，显示为</p>
-<p><img src="https://s1.ax1x.com/2018/05/25/Cf6hHH.jpg" alt="3"></p>
-<p>并没有放弃，把arr1改成2个试一下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mutVCs insertObject:nav atIndex:2];</span><br><span class="line">NSArray *arr1 &#x3D; [mutVCs subarrayWithRange:NSMakeRange(0, 2)];</span><br><span class="line">self.tabBarController.viewControllers &#x3D; arr1;</span><br><span class="line">self.tabBarController.viewControllers &#x3D; mutVCs;</span><br></pre></td></tr></table></figure>
-<p>神奇的事情发生了，完美的显示出来想要的效果</p>
-<p><img src="https://s1.ax1x.com/2018/05/25/Cf6WuD.jpg" alt="4"></p>
-<h3 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h3><p>得出的结论是，<br>1,tabBarVC在重置viewControllers的时候是不管mutArr中的顺序的，而是先判断即将设置的VC是否在当前的VCs        里面，若有之前已经存在过，则不再添加和改变顺序，若是不存在就将新的VC设置在最右边显示</p>
-<p>2,若是tabBarController之前的viewControllers为小于等于1个，那么再次对viewControllers赋值，是起不到作用的。</p>
-<p>Wtf!,虽然1的结论可以证实，但是2的结论这么草率？？！怎么会有这么奇怪的用法？？</p>
-<h3 id="再验证："><a href="#再验证：" class="headerlink" title="再验证："></a>再验证：</h3><p>只能再次去验证其正确性。调试了很多次发现结果变幻莫测，难以找到其规律，比如把index&lt;=1时，即：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mutVCs insertObject:nav atIndex:1];</span><br><span class="line">NSArray *arr1 &#x3D; [mutVCs subarrayWithRange:NSMakeRange(0, 2)];</span><br><span class="line">self.tabBarController.viewControllers &#x3D; arr1;</span><br><span class="line">self.tabBarController.viewControllers &#x3D; mutVCs;</span><br></pre></td></tr></table></figure>
-<p>结果竟然</p>
-<p> <img src="https://s1.ax1x.com/2018/05/25/Cf6ggK.jpg" alt="5"></p>
-<p>为什么会跟insert的index也有关系！，这么乱的复杂情况下面到底藏着怎样的秘密？</p>
-<h3 id="再猜测："><a href="#再猜测：" class="headerlink" title="再猜测："></a>再猜测：</h3><p>经过调试发现发现一个现象：<br>每当我对self.tabBarController.viewControllers = arr1;进行设置时，若arr1中包含自己(也就是Self),那么第二行self.tabBarController.viewControllers = mutVCs; 就会有效！。<br>通过debug 发现，若arr1中包含self，此时打印self.tabBarController，会打印出self.tabBarController的指针，而arr1中没有包含self时，打印出的是self.tabBarController=nil。<br>这么说来 第二行代码无效就解释的通了！！</p>
-<h2 id="最后结论："><a href="#最后结论：" class="headerlink" title="最后结论："></a>最后结论：</h2><p>每当调用tabBarController的setVCs的时候 ，会立即生效并生成相应的tabBarItems, 若这些VCs里面有当前self的VC,那么根据self.tabBarController就能找到self的tabBarController,而如果setVCs里面的VC没有self，那么再继续调用self寻找self的tabBarController自然就找不到了，因为tabBarController跟self已经没有半毛钱关系了。</p>
-<hr>
-<p>欢迎访问我的微博留言：<a href="http://weibo.com/3962951205/profile?topnav=1&wvr=6&is_all=1" target="_blank" rel="noopener">肚子吃撑的杜</a></p>
-
-      
+        <hr>
+    
+        
+    <h5>ARCHIVES</h5>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li></ul>
     </div>
-      
+
+        <hr>
+    
+</div>
+
         
-        
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
-</article>
-
-
-
-
-
-  <article class="post">
-  <div class="post-content">
-    <header>
-      
-  
-    <h1 class="title"><a href="/2017/08/02/aboutIAP/">关于APP内购的一点实战经验之谈</a></h1>
-  
-
-      
-        <time datetime="2017-08-02T09:09:16.000Z">2017-08-02</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>内购上线已经一个多月了，一直没有时间做一个总结，因为之后立马又有两个项目要做，现在闲下来，回忆一下内购路上的一些错误认识，避免其他人进坑。关于iap的文章一搜一大把，这里推荐<a href="http://www.jianshu.com/u/6aba5654805e" target="_blank" rel="noopener">走在路上的小菜鸟</a> <a href="http://www.jianshu.com/p/847edcb1488e" target="_blank" rel="noopener">《iOS Apple内购及掉单问题》</a>的一片文章，算是比较到位的，demo的话推荐<a href="https://github.com/YZQ-Nine" target="_blank" rel="noopener">YZQ_Nine</a>的<a href="https://github.com/YZQ-Nine/IAPDemo" target="_blank" rel="noopener">IAPDemo</a>，所以下面的内容就是以这个demo和《iOS Apple内购及掉单问题》为出发点慢慢说来，关于文章中没有提到的以及demo中的优缺点我下面会讲，陋识拙见，姑且言之，姑且听之。</p>
-<hr>
-<h2 id="为什么要做内购"><a href="#为什么要做内购" class="headerlink" title="为什么要做内购"></a>为什么要做内购</h2><p>因为博主做的是直播APP，第一版上架是没打算做充值的，打算先上了再说，然而由于是虚拟货币交易，苹果告知必须走内购路线否则不能上架，你有什么办法呢，默默听话叫爸爸，还得30%过路费。</p>
-<h2 id="划重点"><a href="#划重点" class="headerlink" title="划重点"></a>划重点</h2><p>注意，看本文之前，先看完开头提的那篇文章，本文所写内容是对《iOS Apple内购及掉单问题》的补充，为避免文字啰嗦 以下以《内购》代之，所以不会对《内购》内已经指明的内容有所重复，也就是说你所看到的都是干货。</p>
-<h4 id="协议、税务和银行业务"><a href="#协议、税务和银行业务" class="headerlink" title="协议、税务和银行业务"></a>协议、税务和银行业务</h4><p>关于协议的填写按照开头提到的那篇文章里的流程走就是了，基本没有问题，这里需要提到的是填写Bank Account Number的时候这个卡号也支持企业名下账号，同样 Account Holder Name 也要填写企业名。</p>
-<h4 id="创建APP内购买项目"><a href="#创建APP内购买项目" class="headerlink" title="创建APP内购买项目"></a>创建APP内购买项目</h4><p>参考《内购》，<br>在“我的APP”中把创建好的APP购买项目添加进来，在这个地方有些文章说，它们说要等到APP审核过了之后才能进行测试，其实不用，在“我的APP”中添加成功之后就可以申请sandBox账户进行测试了。</p>
-<h4 id="代码集成"><a href="#代码集成" class="headerlink" title="代码集成"></a>代码集成</h4><p>这块是重点，在这里我最初的做法是按照demo的思想，也就是下图的流程，见谅一些细节没有体现，</p>
-<p><img src="/MoonSoilWj.github.io/2017/08/02/QQ20170804-161718@2x.png" alt="IAPDemo"></p>
-<p>下面的这张流程图是我们在项目中的流程</p>
-<p><img src="/MoonSoilWj.github.io/2017/08/02/QQ20170805-162415@2x.png" alt="ourIAP"></p>
-<p>这两者的区别从图中明显可以看出来，我们在做的时候是没有把交易凭证储存在本地沙河的。因为考虑到用户可能存在的一个情况，在一个设备上使用充值苹果那边成功了，而我们服务端验证没有成功，这个时候，若按照第一种方案，app会把验证凭证存在本地沙河中并且告诉苹果结束这一订单，待下次重新启动的时候，app检测到本地沙河中有交易凭证就会把交易凭证发给自己的服务端。但是，若是用户卸载了app或者使用了其他设备，那么保存在本地的交易凭证就会丢失，用户就无法在我们的服务端验证成功，就需要人工服务介入查询，为了避免这个问题，我们采用第二种方案。</p>
-<p>第二种方案做法是我们服务端没有验证充值成功的，就不告诉苹果服务器结束这一订单的状态，也就是不去调用<br><code>[[SKPaymentQueue defaultQueue] finishTransaction: transaction];</code>  </p>
-<p>那么在下次启动的时候，苹果会主动告诉你这一单没有结束并且回调给你这一单的状态，我们就可以继续处理这一订单。等于说把有问题的订单交给苹果来帮你保存，这种云端保存省事不少。</p>
-<p>《内购》中提到要是想把自己后台这边的交易单号和苹果的交易单号一一对应起来，可以把自己的单号放在交易类SKMutablePayment的applicationUsername属性中，  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SK_EXTERN_CLASS_AVAILABLE(3_0) @interface SKMutablePayment : SKPayment</span><br><span class="line">@property(nonatomic, copy, readwrite) NSString *applicationUsername NS_AVAILABLE_IOS(7_0);</span><br></pre></td></tr></table></figure>
-<p>这样做是没有问题的，但是后来的使用过程中出现过一个问题，那就是，我虽然在请求交易的时候把applicationUsername传了进去，但是会出现某些时候苹果返回给我的交易没有了这个属性，这就比较尴尬了，是个坑，后来我们就不去管这个对应关系了，发起购买的时候我会向服务端请求一个订单，购买结束的时候把交易凭证传到后台，而后台无需去对应，只要这个人有待付款的订单而且productId对的上的话那么当苹果后台验证成功的时候我们就给他充值成功。</p>
-<h4 id="添加测试账号"><a href="#添加测试账号" class="headerlink" title="添加测试账号"></a>添加测试账号</h4><p>参考《内购》，<br>有些文章说这些测试账号千万不要在正式环境登录，否则会被注销，bullshit，你根本就登不上好吗。测试之前只需在AppStore中将你的正式账号退出就行，然后在你的app点击充值按钮，会有弹框提示你登录。</p>
-<p>另外，使用development证书打包的app都是无法使用正式App Store账号的，也就是说你想测试一下线上的内购就必须审核通过，从App Store下载下来才能测。</p>
-<h4 id="测试遇到的问题及解决"><a href="#测试遇到的问题及解决" class="headerlink" title="测试遇到的问题及解决"></a>测试遇到的问题及解决</h4><ul>
-<li><p>前两天测试环境突然验证不了了，苹果付款成功，但是自己的服务端却无法验证成功，原来是苹果默默把字段改掉，之前测试环境返回的类型是“SandBox”，突然变成了“ProductionSandBox”…，所以验证是失败的，无语，不过相信线上不会这么做的。</p>
-</li>
-<li><p>当有未结束订单的时候，重启APP会走订单监听回调，在这里千万不要APP有问题，比如崩溃😖。。一旦崩溃那么这个用户就再也进不来了，陷入崩溃的死循环中。</p>
-</li>
-</ul>
-<hr>
-<p>欢迎访问我的微博留言：<a href="http://weibo.com/3962951205/profile?topnav=1&wvr=6&is_all=1" target="_blank" rel="noopener">肚子吃撑的杜</a></p>
-
-      
     </div>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
-</article>
+</div>
 
 
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
 
+                
 
+                
 
-  <article class="post">
-  <div class="post-content">
-    <header>
-      
-  
-    <h1 class="title"><a href="/2017/06/16/iOS工程中使用自定义文字/">iOS工程中使用自定义文字</a></h1>
-  
+                
 
-      
-        <time datetime="2017-06-16T07:37:22.000Z">2017-06-16</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>1，把.ttf字体文件拖拽进工程<br>2，在info.plist中添加 Fonts provided by application：ziti.ttf<br>3,在build Phase 中 Copy Bundle Resources</p>
+                
 
-      
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 杜文杰 2020 
+                    <br>
+                    Theme by <a href="http://beantech.org" target="_blank" rel="noopener">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com" target="_blank" rel="noopener">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
     </div>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
-</article>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://du-wenjie.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
 
 
 
 
-
-  <article class="post">
-  <div class="post-content">
-    <header>
-      
-  
-    <h1 class="title"><a href="/2017/06/16/如何使用hexo新建一篇博客/">如何使用hexo新建一篇博客</a></h1>
-  
-
-      
-        <time datetime="2017-06-16T02:05:16.000Z">2017-06-16</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>1,</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cd 进入HEXO文件夹</span><br></pre></td></tr></table></figure>
-
-<p>2,</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new &quot;如何使用hexo新建一片博客&quot;</span><br></pre></td></tr></table></figure>
-
-<p>3, 编辑文档  </p>
-<pre><code>tags: [hexo,部署hexo]  
-category: &quot;随笔bug</code></pre><p>4, 将Markdown生成静态网页文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>5, 部署到Github</p>
-<pre><code>$ hexo deploy</code></pre><p>6，GitHub desktop pull and push </p>
-<hr>
-<p>注意点:   顶部信息”:”后面要跟空格，不然会报错</p>
-
-      
-    </div>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
-</article>
-
-
-
-
-
-  <article class="post">
-  <div class="post-content">
-    <header>
-      
-  
-    <h1 class="title"><a href="/2017/05/23/我的第一篇博客/">我的第一篇博客</a></h1>
-  
-
-      
-        <time datetime="2017-05-23T07:43:26.000Z">2017-05-23</time>
-      
-    </header>
-    <div class="entry">
-      
-        <p>&ensp; &ensp; 看到一些大牛都有了自己的个人网站博客，心里十分的痒痒，从在大学的时候就想搞了，无奈一直到现在。趁着工作之余，又有了闲情雅致，就忍不住搞了一波。</p>
-<ul>
-<li><p>&ensp; &ensp;  首先去万网购买了一个域名，查询<a href="www.duwenjie.com">www.duwenjie.com</a>一看,被甜到了，秀恩爱的程序员。阔怕。。。<br><img src="/MoonSoilWj.github.io/2017/05/24/2E622CF5-BB73-461C-8CD5-ED239F5CBFE2.png" alt=""><br>问题是这并不是我…,然后我就买了<a href="du-wenjie.co">du-wenjie.com</a>]这个域名。</p>
-</li>
-<li><p>接下来是买虚拟主机，然后在网上找了模板，又上传资源，试了一下挺好，然后是备案，很麻烦的说，索性干脆开一个GitHub个人主页，</p>
-</li>
-<li><p>新建一个个人主页的仓库，然后把万网的域名解析到我的GitHub个人主页下</p>
-</li>
-<li><p>发现别人都是使用hexo来管理自己的博客，第一次听说，然后查资料、看文档，下载git、 node.js。。。 下载博客主题，格外喜欢next的theme，首先它是我的偶像<a href="zhoulingyu.com">小鱼周凌宇</a>使用的主题，是一位美女iOS开发，格外佩服，学习</p>
-</li>
-<li><p>原来hexo是要使用Markdown写blog的，看别人推荐使用MacDown客户端，verygood；</p>
-</li>
-</ul>
-<hr>
-<p>nice ending!<br>感觉这几天学习了很多，</p>
-<p>欢迎访问我的微博：<a href="http://weibo.com/3962951205/profile?topnav=1&wvr=6&is_all=1" target="_blank" rel="noopener">肚子吃撑的杜</a></p>
-
-      
-    </div>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-      </footer>
-  </div>
-</article>
+<!-- Baidu Tongji -->
 
 
 
 
 
 
-<nav id="pagination">
-  
-  
-  <div class="clearfix"></div>
-</nav></div></div>
-    <aside id="sidebar" class="alignright">
-  <div class="search">
-  <form action="//google.com/search" method="get" accept-charset="utf-8">
-    <input type="search" name="q" results="0" placeholder="Search">
-    <input type="hidden" name="q" value="site:du-wenjie.com">
-  </form>
-</div>
-
-  
-<div class="widget tag">
-  <h3 class="title">Recent Posts</h3>
-  <ul class="entry">
-    
-      <li>
-        <a href="/2018/05/25/tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入/">tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入</a>
-      </li>
-    
-      <li>
-        <a href="/2017/08/02/aboutIAP/">关于APP内购的一点实战经验之谈</a>
-      </li>
-    
-      <li>
-        <a href="/2017/06/16/iOS工程中使用自定义文字/">iOS工程中使用自定义文字</a>
-      </li>
-    
-      <li>
-        <a href="/2017/06/16/如何使用hexo新建一篇博客/">如何使用hexo新建一篇博客</a>
-      </li>
-    
-      <li>
-        <a href="/2017/05/23/我的第一篇博客/">我的第一篇博客</a>
-      </li>
-    
-  </ul>
-</div>
-
-
-  
-<div class="widget tag">
-  <h3 class="title">Categories</h3>
-  <ul class="entry">
-  
-    <li><a href="/categories/开发经验/">开发经验</a><small>2</small></li>
-  
-    <li><a href="/categories/随笔bug/">随笔bug</a><small>2</small></li>
-  
-    <li><a href="/categories/随笔记录/">随笔记录</a><small>1</small></li>
-  
-  </ul>
-</div>
-
-
-  
-<div class="widget tagcloud">
-  <h3 class="title">Tag Cloud</h3>
-  <div class="entry">
-    <a href="/tags/App%E5%86%85%E8%B4%AD/" style="font-size: 10px;">App内购</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/iOS%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E4%BD%93/" style="font-size: 10px;">iOS自定义字体</a> <a href="/tags/iap/" style="font-size: 10px;">iap</a> <a href="/tags/next/" style="font-size: 10px;">next</a> <a href="/tags/obejct-C/" style="font-size: 10px;">obejct-C</a> <a href="/tags/tabBar/" style="font-size: 10px;">tabBar</a> <a href="/tags/ttf/" style="font-size: 10px;">ttf</a> <a href="/tags/%E4%B8%87%E7%BD%91%E7%94%B3%E8%AF%B7/" style="font-size: 10px;">万网申请</a> <a href="/tags/%E9%83%A8%E7%BD%B2hexo/" style="font-size: 10px;">部署hexo</a>
-  </div>
-</div>
-
-</aside>
-    <div class="clearfix"></div>
-  </div>
-  <footer id="footer" class="inner"><div class="alignleft">
-  
-  &copy; 2020 杜文杰
-  
-</div>
-<div class="clearfix"></div></footer>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://du-wenjie.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
 
 </body>
-</html>
 
+</html>
