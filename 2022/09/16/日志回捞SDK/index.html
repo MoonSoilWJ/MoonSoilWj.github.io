@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入 - 杜文杰 | Blog
+          日志回捞SDK - 杜文杰 | Blog
         
     </title>
 
-    <link rel="canonical" href="http://du-wenjie.com/2018/05/25/tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入/">
+    <link rel="canonical" href="http://duwenjie.site/2022/09/16/日志回捞SDK/">
 
     <!-- Bootstrap Core CSS -->
     
@@ -106,14 +106,12 @@
                             
                               <a class="tag" href="/tags/#obejct-C" title="obejct-C">obejct-C</a>
                             
-                              <a class="tag" href="/tags/#tabBar" title="tabBar">tabBar</a>
-                            
                         </div>
-                        <h1>tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入</h1>
+                        <h1>日志回捞SDK</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by 杜文杰 on
-                            2018-05-25
+                            2022-09-16
                         </span>
                     </div>
                 
@@ -222,38 +220,29 @@
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container">
+                <p>日志一般用于记录用户行为路径、网络诊断、设备状态等数据，以帮助研发同学解决用户反馈的问题，提升用户体验。移动端日志一般只存在于调试控制台或本地，在收到线上用户反馈问题时，有些很诡异而又不能复现的问题，研发同学无法通过远程拿到用户日志，在分析排查问题时，就缺少有效的日志数据支撑，排查问题效率比较低。为了帮助业务线更好的为用户提供服务，提高排查线上异常问题效率，因此我们研发移动端日志回捞基础组件</p>
+                <h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>整体流程：</h3><p>日志回捞的整体流程大致都是下面所示。</p>
+<p><img src="/2022/09/16/日志回捞SDK/img/full_process.jpg" alt="1"></p>
 
-                <h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h3><p>香蕉球APP的tabBar本来一共有5个，由于战略原因，tabBar中的“活动中心” 需要动态由后台配置决定是否显示。</p>
-<p><img src="https://s1.ax1x.com/2018/05/25/Cf62jO.jpg" alt="1"></p>
-<h3 id="理想情况下的做法："><a href="#理想情况下的做法：" class="headerlink" title="理想情况下的做法："></a>理想情况下的做法：</h3><p>1，获取当前tabBarVC中的所有子VC，得到一个数组 mutArr。</p>
-<p>2，根据后台返回的bool值activityCenterOpen，ture为显示，false为隐藏。</p>
-<p>3，（1），若为false，判断mutArr是否包含“活动中心”的VC，包含 则将“活动中心VC”从mutArr中删除。<br>   （2），若为true，判断mutArr是否包含“活动中心”的VC，不包含 则将“活动中心VC”插入到这个mutArr数组，index为2。</p>
-<p>4，调用<br><code>self.tabBarController.viewControllers = mutArr;</code><br>则完成动态配置要求。</p>
-<h3 id="遇到问题："><a href="#遇到问题：" class="headerlink" title="遇到问题："></a>遇到问题：</h3><p>执行前面3,(1)的时候是没有问题的，能成功将“活动中心”从tabBar中删除，<br>然而在3,(2)的时候要将”活动中心“插入到tabBar的第三个的时候，实际显示确实这样的：<br><img src="https://s1.ax1x.com/2018/05/25/Cf6fDe.jpg" alt="2"></p>
-<p>没错！活动中心被加在了最后一个item上了。<br>通过调试 发现mutArr中的各个VC的顺序，并没有改变，“活动中心VC”在数组中位置就是index=2，没有问题。</p>
-<h3 id="猜测："><a href="#猜测：" class="headerlink" title="猜测："></a>猜测：</h3><p>面对这样的结果，只能猜测tabBarVC在重置viewControllers的时候是不管mutArr中的顺序的，而是先判断即将设置的VC是否在当前的VCs        里面，若有之前已经存在过，则不再添加，若是不存在就将新的VC设置在最右边显示。也就是说 self.tabBarController.viewControllers = mutArr; 并不是真正的重置！</p>
-<h3 id="尝试："><a href="#尝试：" class="headerlink" title="尝试："></a>尝试：</h3><p>通过这样的猜测，已经可以想象到解决方案了，那就是在插入VC的时候，先把之前的都去掉，再重新复制，即，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self.tabBarController.viewControllers &#x3D; @[];</span><br><span class="line">self.tabBarController.viewControllers &#x3D; mutArr;</span><br></pre></td></tr></table></figure>
+<h3 id="理想情况下的做法："><a href="#理想情况下的做法：" class="headerlink" title="理想情况下的做法："></a>一，日志上报：</h3>
+<p>请求策略时机，有三种做法： （建议1或2）</p>
+<p>1，用户点击问题反馈上报  </p>
+<p>2，平台配置wid->app enterforeground时调接口上报</p>
+<p>3，推送（iOS需用户开启后台刷新，低电量模式会关闭）</p>
+<P>上报日志流程：<br> <img src="/2022/09/16/日志回捞SDK/img/report_process.jpg"></P>
+<p>请求策略接口失败，5s后再次请求，直到成功</p>
 
-<p> 结果只是第一行代码起了作用，也就是tabBarItem全部移除了。</p>
-<p>   没有道理。莫非是先把VCs设置为空数组之后，就不能更改了？ 后来将代码改成</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mutVCs insertObject:nav atIndex:2];</span><br><span class="line"> NSArray *arr1 &#x3D; [mutVCs subarrayWithRange:NSMakeRange(0, 1)];</span><br><span class="line">self.tabBarController.viewControllers &#x3D; arr1;</span><br><span class="line">self.tabBarController.viewControllers &#x3D; mutVCs;</span><br></pre></td></tr></table></figure>
-<p>结果依然是第一行代码起作用，第二行没有设置上，显示为</p>
-<p><img src="https://s1.ax1x.com/2018/05/25/Cf6hHH.jpg" alt="3"></p>
-<p>并没有放弃，把arr1改成2个试一下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mutVCs insertObject:nav atIndex:2];</span><br><span class="line">NSArray *arr1 &#x3D; [mutVCs subarrayWithRange:NSMakeRange(0, 2)];</span><br><span class="line">self.tabBarController.viewControllers &#x3D; arr1;</span><br><span class="line">self.tabBarController.viewControllers &#x3D; mutVCs;</span><br></pre></td></tr></table></figure>
-<p>神奇的事情发生了，完美的显示出来想要的效果</p>
-<p><img src="https://s1.ax1x.com/2018/05/25/Cf6WuD.jpg" alt="4"></p>
-<h3 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h3><p>得出的结论是，<br>1,tabBarVC在重置viewControllers的时候是不管mutArr中的顺序的，而是先判断即将设置的VC是否在当前的VCs        里面，若有之前已经存在过，则不再添加和改变顺序，若是不存在就将新的VC设置在最右边显示</p>
-<p>2,若是tabBarController之前的viewControllers为小于等于1个，那么再次对viewControllers赋值，是起不到作用的。</p>
-<p>Wtf!,虽然1的结论可以证实，但是2的结论这么草率？？！怎么会有这么奇怪的用法？？</p>
-<h3 id="再验证："><a href="#再验证：" class="headerlink" title="再验证："></a>再验证：</h3><p>只能再次去验证其正确性。调试了很多次发现结果变幻莫测，难以找到其规律，比如把index&lt;=1时，即：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mutVCs insertObject:nav atIndex:1];</span><br><span class="line">NSArray *arr1 &#x3D; [mutVCs subarrayWithRange:NSMakeRange(0, 2)];</span><br><span class="line">self.tabBarController.viewControllers &#x3D; arr1;</span><br><span class="line">self.tabBarController.viewControllers &#x3D; mutVCs;</span><br></pre></td></tr></table></figure>
-<p>结果竟然</p>
-<p> <img src="https://s1.ax1x.com/2018/05/25/Cf6ggK.jpg" alt="5"></p>
-<p>为什么会跟insert的index也有关系！，这么乱的复杂情况下面到底藏着怎样的秘密？</p>
-<h3 id="再猜测："><a href="#再猜测：" class="headerlink" title="再猜测："></a>再猜测：</h3><p>经过调试发现发现一个现象：<br>每当我对self.tabBarController.viewControllers = arr1;进行设置时，若arr1中包含自己(也就是Self),那么第二行self.tabBarController.viewControllers = mutVCs; 就会有效！。<br>通过debug 发现，若arr1中包含self，此时打印self.tabBarController，会打印出self.tabBarController的指针，而arr1中没有包含self时，打印出的是self.tabBarController=nil。<br>这么说来 第二行代码无效就解释的通了！！</p>
-<h2 id="最后结论："><a href="#最后结论：" class="headerlink" title="最后结论："></a>最后结论：</h2><p>每当调用tabBarController的setVCs的时候 ，会立即生效并生成相应的tabBarItems, 若这些VCs里面有当前self的VC,那么根据self.tabBarController就能找到self的tabBarController,而如果setVCs里面的VC没有self，那么再继续调用self寻找self的tabBarController自然就找不到了，因为tabBarController跟self已经没有半毛钱关系了。</p>
+<h3 id="遇到问题："><a href="#遇到问题：" class="headerlink" title="遇到问题："></a>二，日志采集</h3>
+<p>1），日志类型：<br>全埋点信息+ 代码log + 网络请求 + 防崩溃捕获的错误 + bugly崩溃捕获的崩溃<br><img src="/2022/09/16/日志回捞SDK/img/report_type.jpg" alt="2">各模块通过调用日志SDK提供的api, 加入日志</p>
+<p>2），日志内容：（参考了美团Logan）：<br>日志时间+日志类型+线程ID+是否主线程 + 详情<br><img src="/2022/09/16/日志回捞SDK/img/report_detail.jpg" alt="2"></p>
+
+<h3 id="猜测："><a href="#猜测：" class="headerlink" title="猜测："></a>三，日志保存：</h3>
+<p><img src="/2022/09/16/日志回捞SDK/img/report_process.jpg"><br>1，mmkv,（mmap），通过内存映射提高性能，同时解决crash前保存的值很容易出现保存失败的情况。<br>
+    2，达到阈值后写入本地文件,  以日期时间命名文件，方便查找，单个文件大小为1m<br>
+    3，数据可以加密<br>
+    4，默认存储14天</p>
+
+
 <hr>
 <p>欢迎访问我的微博留言：<a href="http://weibo.com/3962951205/profile?topnav=1&wvr=6&is_all=1" target="_blank" rel="noopener">肚子吃撑的杜</a></p>
 
@@ -265,7 +254,7 @@
                     
                     
                         <li class="next">
-                            <a href="/2017/08/02/aboutIAP/" data-toggle="tooltip" data-placement="top" title="关于APP内购的一点实战经验之谈">Next Post &rarr;</a>
+                            <a href="/2018/05/25/aboutIAP/" data-toggle="tooltip" data-placement="top" title="tabBar中动态插入tabBarItem">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
