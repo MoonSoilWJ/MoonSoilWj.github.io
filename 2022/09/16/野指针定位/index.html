@@ -14,7 +14,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          日志回捞SDK - 杜文杰 | Blog
+          野指针定位 - 杜文杰 | Blog
         
     </title>
 
@@ -107,7 +107,7 @@
                               <a class="tag" href="/tags/#obejct-C" title="obejct-C">obejct-C</a>
                             
                         </div>
-                        <h1>日志回捞SDK</h1>
+                        <h1>野指针定位</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by 杜文杰 on
@@ -150,26 +150,13 @@
                     <li>
                         <a href="/">Home</a>
                     </li>
-
-                    
-
-                        
                         <li>
                             <a href="/about/">about me</a>
                         </li>
-                        
-                    
-
-                        
                         <li>
                             <a href="/tags/">Tags</a>
                         </li>
                         
-                    
-
-                        
-                    
-                    
                 </ul>
             </div>
         </div>
@@ -220,29 +207,61 @@
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container">
-                <p>日志一般用于记录用户行为路径、网络诊断、设备状态等数据，以帮助研发同学解决用户反馈的问题，提升用户体验。移动端日志一般只存在于调试控制台或本地，在收到线上用户反馈问题时，有些很诡异而又不能复现的问题，研发同学无法通过远程拿到用户日志，在分析排查问题时，就缺少有效的日志数据支撑，排查问题效率比较低。为了帮助业务线更好的为用户提供服务，提高排查线上异常问题效率，因此我们研发移动端日志回捞基础组件</p>
-                <h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>整体流程：</h3><p>日志回捞的整体流程大致都是下面所示。</p>
-<p><img src="/2022/09/16/日志回捞SDK/img/full_process.jpg" alt="1"></p>
+                <h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>什么是野指针：</h3>
+                <p>C语言中的野指针: <br>
+                    定义1个指针变量.没有初始化.这个指针变量的值是1个垃圾值,指向1块随机的空间.指针指向的地址没有初始化。这样的指针就是野指针。<br>
+                    <code>char *a;</code><br>
+                    OC中的野指针: <br>指针指向的对象已经被回收了.这样的指针就叫做野指针.<br>
+                    <code>// 悬垂指针：<br>
+                        __unsafe_unretained Person *p1;<br>
+                        @autoreleasepool {<br>
+                            Person *person = [[Person alloc] init];<br>
+                            p1 = person;<br>
+                        }<br>
+                        [p1 run];<br>
+                    </code>
+                </p>
 
-<h3 id="理想情况下的做法："><a href="#理想情况下的做法：" class="headerlink" title="理想情况下的做法："></a>一，日志上报：</h3>
-<p>请求策略时机，有三种做法： （建议1或2）</p>
-<p>1，用户点击问题反馈上报  </p>
-<p>2，平台配置wid->app enterforeground时调接口上报</p>
-<p>3，推送（iOS需用户开启后台刷新，低电量模式会关闭）</p>
-<P>上报日志流程：<br> <img src="/2022/09/16/日志回捞SDK/img/report_process.jpg"></P>
-<p>请求策略接口失败，5s后再次请求，直到成功</p>
+                <h3 id="野指针的分类："><a href="#野指针的分类：" class="headerlink" title="野指针的分类："></a>野指针的分类：</h3>
+                <p> <img src="/2022/09/16/野指针定位/img/wild_point_type.jpg"></P>
 
-<h3 id="遇到问题："><a href="#遇到问题：" class="headerlink" title="遇到问题："></a>二，日志采集</h3>
-<p>1），日志类型：<br>全埋点信息+ 代码log + 网络请求 + 防崩溃捕获的错误 + bugly崩溃捕获的崩溃<br><img src="/2022/09/16/日志回捞SDK/img/report_type.jpg" alt="2">各模块通过调用日志SDK提供的api, 加入日志</p>
-<p>2），日志内容：（参考了美团Logan）：<br>日志时间+日志类型+线程ID+是否主线程 + 详情<br><img src="/2022/09/16/日志回捞SDK/img/report_detail.jpg" alt="2"></p>
+                <h3 id="野指针引发了哪些问题："><a href="#野指针引发了哪些问题：" class="headerlink" title="野指针引发了哪些问题："></a>野指针引发了哪些问题：</h3>
+                <p>1，上线前没有发现，上线后crash。<br>
+                    2，crash日志看不到有用信息</p>
 
-<h3 id="猜测："><a href="#猜测：" class="headerlink" title="猜测："></a>三，日志保存：</h3>
-<p><img src="/2022/09/16/日志回捞SDK/img/report_process.jpg"><br>1，mmkv,（mmap），通过内存映射提高性能，同时解决crash前保存的值很容易出现保存失败的情况。<br>
-    2，达到阈值后写入本地文件,  以日期时间命名文件，方便查找，单个文件大小为1m<br>
-    3，数据可以加密<br>
-    4，默认存储14天</p>
+                <h3 id="解决思路："><a href="#解决思路：" class="headerlink" title="解决思路："></a>解决思路：</h3>
+                <p>1，让随机变的不随机、提高测试覆盖场景。<br>
+                    2，跟踪真实被销毁对象的堆栈信息。</p>
 
+                <h3 id="工具："><a href="#工具：" class="headerlink" title="工具："></a>工具：</h3>
+                <p>Zombie Object <br>
+                    Address Sanitizer<br>
+                    Malloc scribble</p>
+                    <img src="/2022/09/16/野指针定位/img/xcode_tool.jpg">
 
+                <h3><a href="" class="headerlink" title=""></a>Address Sanitizer</h3>
+                <p>原理：当程序创建变量分配一段内存时，将此内存后面的一段内存也冻结住，标识为中毒内存。</p>
+                    <img src="/2022/09/16/野指针定位/img/address_sanitizer.jpg">
+                    <p>(黄色是变量所占内存，紫色是冻结的中毒内存）<br> 
+                    当程序访问到中毒内存时（越界访问），就会抛出异常，并打印log，如果变量释放了，变量所占内存也会标识为中毒内存，这时候访问就会抛异常</p>
+
+                <h3><a href="" class="headerlink" title=""></a>Malloc scribble</h3>
+                <p>原理：原理：在对象申请内存后，在申请的内存上填入0xAA，内存释放后填上0x55；如果内存未被初始化就被访问，或者释放后被访问，抛出异常。</p>
+                
+
+                <h3><a href="" class="headerlink" title=""></a>Zombie Object</h3>
+                <p>原理：用生成的僵尸对象来替换dealloc的实现，当对象引用计数为0的时候，将需要dealloc的对象转化为僵尸对象，如果之后再给这个僵尸对象发消息，则抛出异常，并打印相应的信息。</p>
+                <p>僵尸对象：一个对象已经解除了它的引用，已经被释放掉，但是仍然可以接受消息，这个对象就是僵尸对象。</p>
+                <img src="/2022/09/16/野指针定位/img/zombie_object_process1.jpg">
+                <img src="/2022/09/16/野指针定位/img/zombie_object_process2.jpg">
+
+                <h3><a href="" class="headerlink" title=""></a>嵌入app:</h3>
+                <p>系统的工具无法嵌入app，需要手动实现类似zombie object。如果要安装到手机上，那么需要考虑到性能问题，可以从下面两方面来着手处理：</p>
+                <p>1，30秒后释放.<br>
+                2,白名单机制（比如NSString，UIView等系统类创建，释放非常频繁，而这些实例发生野指针概率非常低；其他会造成崩溃的NSBundle；自身相关的类，否则循环调用）</p>
+                <img src="/2022/09/16/野指针定位/img/code_zombie_object.jpg">
+                <img src="/2022/09/16/野指针定位/img/code_zombie_object2.jpg">
+                <img src="/2022/09/16/野指针定位/img/code_zombie_object3.jpg">
 <hr>
 <p>欢迎访问我的微博留言：<a href="http://weibo.com/3962951205/profile?topnav=1&wvr=6&is_all=1" target="_blank" rel="noopener">肚子吃撑的杜</a></p>
 
