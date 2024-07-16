@@ -1,793 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Head tag -->
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="keyword"  content="">
-    <link rel="shortcut icon" href="/img/ironman-draw.png">
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <title>
-        
-          杜文杰 | Blog
-        
-    </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏模式</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/jquery.fullPage.css">
+    <style>
+        nav {
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            left: 360px;
+        }
 
-    <link rel="canonical" href="http://du-wenjie.com/">
+        a {
+            text-decoration: none;
+            color: #000;
+        }
 
-    <!-- Bootstrap Core CSS -->
-    
-<link rel="stylesheet" href="/css/bootstrap.min.css">
+        .logo span {
+            margin-left: 27px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #000;
+        }
 
+        .serve-translate {
+            background-color: #fff;
+        }
 
-    <!-- Custom CSS --> 
-    
-<link rel="stylesheet" href="/css/beantech.min.css">
+        footer {
+            margin-top: 112px;
+        }
 
+        #fp-nav ul li a span,
+        .fp-slidesNav ul li a span {
+            top: 0px;
+            left: 0px;
+            width: 12px;
+            height: 12px;
+            border-radius: 0;
+            position: absolute;
+            z-index: 1;
+            border-radius: 50%;
+            border: 1px solid #000;
+        }
+        .logoImg{display: block;width:147px;margin:0;}
+        #jpdown-page .product-content img{width:300px;top:150px}
+        .text{margin:100px 0 0 0 ;}
+    </style>
+</head>
 
-    
-<link rel="stylesheet" href="/css/donate.css">
-
-    
-    <!-- Pygments Highlight CSS -->
-    
-<link rel="stylesheet" href="/css/highlight.css">
-
-
-    
-<link rel="stylesheet" href="/css/widget.css">
-
-
-    
-<link rel="stylesheet" href="/css/rocket.css">
-
-
-    
-<link rel="stylesheet" href="/css/signature.css">
-
-
-    
-<link rel="stylesheet" href="/css/toc.css">
-
-
-    <!-- Custom Fonts -->
-    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
-    <!-- Hux change font-awesome CDN to qiniu -->
-    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-
-    <!-- Hux Delete, sad but pending in China
-    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
-    css'>
-    -->
-
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- ga & ba script hoook -->
-    <script></script>
-<meta name="generator" content="Hexo 4.2.0"></head>
-
-
-<!-- hack iOS CSS :active style -->
-<body ontouchstart="">
-	<!-- Modified by Yu-Hsuan Yen -->
-<!-- Post Header -->
-<style type="text/css">
-    header.intro-header{
-        
-            background-image: url('/img/header_img/home.jpg') 
-            /*config*/
-        
-    }
-    
-</style>
-
-<header class="intro-header" >
-    <!-- Signature -->
-    <div id="signature">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<body>
+    <!-- 头部 -->
+    <header>
+        <nav class="flex w">
+            <img class="logoImg" src="img/logo@2x.png" alt="">
+            <ul class="title flex">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../productList.html">产品中心</a></li>
+                <li><a href="../join.html">人才招聘</a></li>
+                <li><a href="../about.html">关于我们</a></li>
                 
-                    <div class="site-heading">
-                        <h1>杜文杰</h1>
-                        <!--<hr class="small">-->
-                        <span class="subheading">iOS 开发者， do something for you</span>
+            </ul>
+        </nav>
+    </header>
+    <!-- 内容区 -->
+    <section id="jpdown-page">
+
+        <!-- 产品内容区 -->
+        <div class="product-content">
+            <!-- 悦颜相机 -->
+            <div class="serve-translate serve-flash section page1">
+                <div class="flash w flex">
+                    <div class="text">
+                        <h2>游戏模式</h2>
+                        <!-- <li>MY</li>
+                        <span>DIARY</span> -->
+                        <p style="margin-top: 39px;">专业游戏游玩状态的App</p>
+                        <div class="bgc-url"></div>
                     </div>
-                
+                    <img src="img/1.png" alt="">
+                </div>
+            </div>
+            <!-- 精致修容 -->
+            <div class="serve-translate serve-voice  section page2">
+                <div class="voice w white">
+                    <h2>个人中心</h2>
+                    <div class="bgc-icon"></div>
+                    <p>
+                        个性设置<br/>
+                        随时使用
+                    </p>
+                    <img src="img/2.png" alt="">
+                </div>
+            </div>
+            <!-- 高级滤镜 -->
+            <div class="serve-translate serve-flash section page3">
+                <div class="flash w flex white">
+                    <div>
+                        <h2>会员中心</h2>
+                        <div class="bgc-icon"></div>
+                        <p>
+                            尊贵会员<br>
+                            立享体验
+                        </p>
+                        <img src="img/3.png" alt="">
+                    </div>
+                </div>
+            </div>
+            <!-- 在线美颜 -->
+            <div class="serve-translate serve-voice section page4">
+                <div class="voice w white">
+                    <h2>关于我们</h2>
+                    <div class="bgc-icon"></div>
+                    <p>
+                        用户协议<br/>
+                        隐私政策
 
-
+                    </p>
+                    <img src="img/4.png" alt="">
                 </div>
             </div>
         </div>
-    </div>
-</header>
-
-	
-    <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header page-scroll">
-            <button type="button" class="navbar-toggle">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">杜文杰</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <!-- Known Issue, found by Hux:
-            <nav>'s height woule be hold on by its content.
-            so, when navbar scale out, the <nav> will cover tags.
-            also mask any touch event of tags, unfortunately.
-        -->
-        <div id="huxblog_navbar">
-            <div class="navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
-
-                    
-
-                        
-                        <li>
-                            <a href="/about/">about me</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                    
-                    
-                </ul>
-            </div>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container -->
-</nav>
+    </section>
+</body>
+<script src="js/jquery-1.11.0.min.js"></script>
+<script src="js/jquery.fullPage.min.js"></script>
 <script>
-    // Drop Bootstarp low-performance Navbar
-    // Use customize navbar with high-quality material design animation
-    // in high-perf jank-free CSS3 implementation
-    var $body   = document.body;
-    var $toggle = document.querySelector('.navbar-toggle');
-    var $navbar = document.querySelector('#huxblog_navbar');
-    var $collapse = document.querySelector('.navbar-collapse');
-
-    $toggle.addEventListener('click', handleMagic)
-    function handleMagic(e){
-        if ($navbar.className.indexOf('in') > 0) {
-        // CLOSE
-            $navbar.className = " ";
-            // wait until animation end.
-            setTimeout(function(){
-                // prevent frequently toggle
-                if($navbar.className.indexOf('in') < 0) {
-                    $collapse.style.height = "0px"
+    $(document).ready(function () {
+        $(function () {
+            $('#jpdown-page').fullpage({
+                'navigation': true,
+                'scrollingSpeed': 800,
+                'continuousVertical': false,
+                'css3': true,
+                //events
+                afterLoad: function (anchorLink, index) {
+                    if (index == 2) {
+                        $('.page2').find('.move-item').delay(100).animate({
+                            bottom: '-17%'
+                        }, 'slow');
+                    }
+                    if (index == 3) {
+                        $('.page3').find('.move-item').delay(100).animate({
+                            bottom: '-17%'
+                        }, 'slow');
+                    }
+                    if (index == 4) {
+                        $('.page4').find('.move-item').delay(100).animate({
+                            bottom: '-17%'
+                        }, 'slow');
+                    }
+                },
+                onLeave: function (index, direction) {
+                    if (index == '2') {
+                        $('.page2').find('.move-item').delay(0).animate({
+                            bottom: '0%'
+                        }, 'fast');
+                    }
+                    if (index == '3') {
+                        $('.page3').find('.move-item').delay(0).animate({
+                            bottom: '0%'
+                        }, 'fast');
+                    }
+                    if (index == '4') {
+                        $('.page4').find('.move-item').delay(0).animate({
+                            bottom: '0%'
+                        }, 'fast');
+                    }
                 }
-            },400)
-        }else{
-        // OPEN
-            $collapse.style.height = "auto"
-            $navbar.className += " in";
-        }
-    }
-</script>
-
-
-    <!-- Main Content -->
-    <!-- Main Content -->
-<div class="container">
-    <div class="row">
-        
-
-<!-- USE SIDEBAR -->
-    <!-- Post Container -->
-            <div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                post-container
-            ">
-            
-                <!-- Main Content -->
-
-<div class="post-preview">
-    <a href="/2022/09/16/野指针定位/">
-        <h2 class="post-title">              
-            野指针定位
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            C语言中的野指针: 定义1个指针变量.没有初始化.这个指针变量的值是1个垃圾值,指向1块随机的空间.指针指向的地址没有初始化。这样的指针就是野指针。
-OC中的野指针: 指针指向的对象已经被回收了.这样的指针就叫做野指针.
-        </div>
-    </a>
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 杜文杰 on
-            2022-09-16
-        </p>
-        <div class="tags">
-                <a href="/tags/#obejct-C" title="obejct-C">obejct-C</a>
-            
-        </div>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2022/09/16/日志回捞SDK/">
-        <h2 class="post-title">              
-            日志回捞SDK
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            日志一般用于记录用户行为路径、网络诊断、设备状态等数据，以帮助研发同学解决用户反馈的问题，提升用户体验。
-            移动端日志一般只存在于调试控制台或本地，在收到线上用户反馈问题时，有些很诡异而又不能复现的问题，研发同学无法通过远程拿到用户日志，在分析排查问题时，
-            就缺少有效的日志数据支撑，排查问题效率比较低。为了帮助业务线更好的为用户提供服务，提高排查线上异常问题效率，因此我们研发移动端日志回捞基础组件
-
-        </div>
-    </a>
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 杜文杰 on
-            2022-09-16
-        </p>
-        <div class="tags">
-                <a href="/tags/#obejct-C" title="obejct-C">obejct-C</a>
-            
-        </div>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2018/05/25/tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入/">
-        <h2 class="post-title">
-                                 
-            tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            需求：香蕉球APP的tabBar本来一共有5个，由于战略原因，tabBar中的“活动中心” 需要动态由后台配置决定是否显示。
-
-理想情况下的做法：1，获取当前tabBarVC中的所有子VC，得到一个数组 mutArr。
-2，根据后台返回的bool值activityCenterOpen，ture为显示，false为隐藏。
-3，（1），若为false，判断mutArr是否包含“活动中心”的VC，......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 杜文杰 on
-            2018-05-25
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#obejct-C" title="obejct-C">obejct-C</a>
-            
-              <a href="/tags/#tabBar" title="tabBar">tabBar</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/08/02/aboutIAP/">
-        <h2 class="post-title">
-                                 
-            关于APP内购的一点实战经验之谈
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            内购上线已经一个多月了，一直没有时间做一个总结，因为之后立马又有两个项目要做，现在闲下来，回忆一下内购路上的一些错误认识，避免其他人进坑。关于iap的文章一搜一大把，这里推荐走在路上的小菜鸟 《iOS Apple内购及掉单问题》的一片文章，算是比较到位的，demo的话推荐YZQ_Nine的IAPDemo，所以下面的内容就是以这个demo和《iOS Apple内购及掉单问题》为出发点慢慢说来，......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 杜文杰 on
-            2017-08-02
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#iap" title="iap">iap</a>
-            
-              <a href="/tags/#App内购" title="App内购">App内购</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/06/16/iOS工程中使用自定义文字/">
-        <h2 class="post-title">
-                                 
-            iOS工程中使用自定义文字
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            1，把.ttf字体文件拖拽进工程2，在info.plist中添加 Fonts provided by application：ziti.ttf3,在build Phase 中 Copy Bundle Resources
-...
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 杜文杰 on
-            2017-06-16
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#ttf" title="ttf">ttf</a>
-            
-              <a href="/tags/#iOS自定义字体" title="iOS自定义字体">iOS自定义字体</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/06/16/如何使用hexo新建一篇博客/">
-        <h2 class="post-title">
-                                 
-            如何使用hexo新建一篇博客
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            1,
-1$ cd 进入HEXO文件夹
-
-2,
-1$ hexo new &quot;如何使用hexo新建一片博客&quot;
-
-3, 编辑文档  
-tags: [hexo,部署hexo]  
-category: &quot;随笔bug4, 将Markdown生成静态网页文件
-1$ hexo generate
-5, 部署到Github
-$ hexo deploy6，GitHub desktop ......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 杜文杰 on
-            2017-06-16
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#hexo" title="hexo">hexo</a>
-            
-              <a href="/tags/#部署hexo" title="部署hexo">部署hexo</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/05/23/我的第一篇博客/">
-        <h2 class="post-title">
-                                 
-            我的第一篇博客
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            &ensp; &ensp; 看到一些大牛都有了自己的个人网站博客，心里十分的痒痒，从在大学的时候就想搞了，无奈一直到现在。趁着工作之余，又有了闲情雅致，就忍不住搞了一波。
-
-&ensp; &ensp;  首先去万网购买了一个域名，查询www.duwenjie.com一看,被甜到了，秀恩爱的程序员。阔怕。。。问题是这并不是我…,然后我就买了du-wenjie.com]这个域名。
-
-接下来是买虚......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 杜文杰 on
-            2017-05-23
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#hexo" title="hexo">hexo</a>
-            
-              <a href="/tags/#万网申请" title="万网申请">万网申请</a>
-            
-              <a href="/tags/#next" title="next">next</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    
-</ul>
-
-
-
-                <br>
-
-                <!-- require APlayer -->
-                
-
-                <!-- 如果开启评论功能 -->
-                
-            </div>
-
-          <!-- Sidebar Container -->
-<div class="
-    col-lg-3 col-lg-offset-0
-    col-md-3 col-md-offset-0
-    col-sm-12
-    col-xs-12
-    sidebar-container
-">
-    
-        <!-- Featured Tags -->
-
-<section>
-    <!-- no hr -->
-    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-    <div class="tags">
-        
-            
-            <a href="/tags/#iap" title="iap" rel="1">iap</a>
-            
-        
-            
-            <a href="/tags/#App内购" title="App内购" rel="1">App内购</a>
-            
-        
-            
-            <a href="/tags/#ttf" title="ttf" rel="1">ttf</a>
-            
-        
-            
-            <a href="/tags/#iOS自定义字体" title="iOS自定义字体" rel="1">iOS自定义字体</a>
-            
-        
-            
-            <a href="/tags/#hexo" title="hexo" rel="2">hexo</a>
-            
-        
-            
-            <a href="/tags/#部署hexo" title="部署hexo" rel="1">部署hexo</a>
-            
-        
-            
-            <a href="/tags/#obejct-C" title="obejct-C" rel="1">obejct-C</a>
-            
-        
-            
-            <a href="/tags/#tabBar" title="tabBar" rel="1">tabBar</a>
-            
-        
-            
-            <a href="/tags/#万网申请" title="万网申请" rel="1">万网申请</a>
-            
-        
-            
-            <a href="/tags/#next" title="next" rel="1">next</a>
-            
-        
-    </div>
-</section>
-
-        <hr>
-    
-        <!-- Short About -->
-<section class="visible-md visible-lg">
-    <h5><a href="/about/">ABOUT ME</a></h5>
-    <div class="short-about">
-
-        
-            <img id = "avatar_pic" src="/img/avatar.png" />
-        
-
-        
-            <p>Stay hungry,Stay foolish</p>
-        
-
-        <!-- SNS Link -->
-        <ul class="list-inline">
-            
-            
-            
-
-            
-
-            
-
-            
-                <li>
-                    <a target="_blank"  href="https://github.com/MoonSoilWJ">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-            
-            
-            
-        </ul>
-    </div>
-</section>
-
-        <hr>
-    
-        
-  <h5>RECENT POSTS</h3>
-  <div class="widget">
-    <ul>
-      
-        <li>
-          <a href="/2018/05/25/tabBar%E4%B8%AD%E5%8A%A8%E6%80%81%E6%8F%92%E5%85%A5tabBarItem%E7%9A%84trick%EF%BC%8C%E5%B9%B6%E7%94%B1%E6%AD%A4%E5%BC%95%E5%8F%91%E7%9A%84%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%B7%B1%E5%85%A5/">tabBar中动态插入tabBarItem的trick，并由此引发的进一步深入</a>
-        </li>
-      
-        <li>
-          <a href="/2017/08/02/aboutIAP/">关于APP内购的一点实战经验之谈</a>
-        </li>
-      
-        <li>
-          <a href="/2017/06/16/iOS%E5%B7%A5%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%87%E5%AD%97/">iOS工程中使用自定义文字</a>
-        </li>
-      
-        <li>
-          <a href="/2017/06/16/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8hexo%E6%96%B0%E5%BB%BA%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">如何使用hexo新建一篇博客</a>
-        </li>
-      
-        <li>
-          <a href="/2017/05/23/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">我的第一篇博客</a>
-        </li>
-      
-    </ul>
-  </div>
-
-        <hr>
-    
-        <!-- Friends Blog -->
-
-<h5>FRIENDS</h5>
-<ul class="list-inline">
-
-    
-</ul>
-
-        <hr>
-    
-        
-    <h5>ARCHIVES</h5>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-
-        <hr>
-    
-</div>
-
-        
-    </div>
-</div>
-
-
-    <!-- Footer -->
-    <!-- Footer -->
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">
-                
-                
-                
-
-                
-
-                
-
-                
-                    <li>
-                        <a target="_blank"  href="https://github.com/MoonSoilWJ">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
-                
-
-                
-
-                </ul>
-                <p class="copyright text-muted">
-                    Copyright &copy; 杜文杰 2020 
-                    <br>
-                    Theme by <a href="http://beantech.org" target="_blank" rel="noopener">BeanTech</a> 
-                    <span style="display: inline-block; margin: 0 5px;">
-                        <i class="fa fa-heart"></i>
-                    </span> 
-                    re-Ported by <a href="http://www.huweihuang.com" target="_blank" rel="noopener">胡伟煌</a> | 
-                    <iframe
-                        style="margin-left: 2px; margin-bottom:-5px;"
-                        frameborder="0" scrolling="0" width="91px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
-                    </iframe>
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<!-- jQuery -->
-
-<script src="/js/jquery.min.js"></script>
-
-
-<!-- Bootstrap Core JavaScript -->
-
-<script src="/js/bootstrap.min.js"></script>
-
-
-<!-- Custom Theme JavaScript -->
-
-<script src="/js/hux-blog.min.js"></script>
-
-
-
-<!-- async load function -->
-<script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-
-<!-- 
-     Because of the native support for backtick-style fenced code blocks 
-     right within the Markdown is landed in Github Pages, 
-     From V1.6, There is no need for Highlight.js, 
-     so Huxblog drops it officially.
-
-     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
-     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
--->
-<!--
-    <script>
-        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
-            hljs.initHighlightingOnLoad();
+            })
         })
-    </script>
-    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
--->
-
-
-<!-- jquery.tagcloud.js -->
-<script>
-    // only load tagcloud.js in tag.html
-    if($('#tag_cloud').length !== 0){
-        async("http://du-wenjie.com/js/jquery.tagcloud.js",function(){
-            $.fn.tagcloud.defaults = {
-                //size: {start: 1, end: 1, unit: 'em'},
-                color: {start: '#bbbbee', end: '#0085a1'},
-            };
-            $('#tag_cloud a').tagcloud();
-        })
-    }
-</script>
-
-<!--fastClick.js -->
-<script>
-    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
-        var $nav = document.querySelector("nav");
-        if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-<!-- Google Analytics -->
-
-
-<script>
-    // dynamic User by Hux
-    var _gaId = 'UA-XXXXXXXX-X';
-    var _gaDomain = 'yoursite';
-
-    // Originial
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', _gaId, _gaDomain);
-    ga('send', 'pageview');
-</script>
-
-
-
-
-<!-- Baidu Tongji -->
-
-<script>
-    // dynamic User by Hux
-    var _baId = 'xxx';
-
-    // Originial
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?" + _baId;
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-</script>
-
-
-
-
-
-
-	<a id="rocket" href="#top" class=""></a>
-	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
-    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
-<!-- Image to hack wechat -->
-<img src="http://du-wenjie.com/img/icon_wechat.png" width="0" height="0" />
-<!-- Migrate from head to bottom, no longer block render and still work -->
-
-</body>
 
 </html>
