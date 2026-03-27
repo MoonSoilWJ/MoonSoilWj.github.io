@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI角色模型对比测试工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: #fff;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .role-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .role-input-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .role-info input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .role-info input:focus {
+            border-color: #667eea;
+        }
+
+        .role-info .role-name {
+            width: 140px;
+        }
+
+        .role-info .role-bio {
+            flex: 1;
+        }
+
+        .role-info .role-persona {
+            flex: 2;
+        }
+
+        .role-info .role-opening {
+            flex: 1;
+        }
+
+        .role-info .role-mode {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+            cursor: pointer;
+        }
+
+        .role-info .role-mode:focus {
+            border-color: #667eea;
+        }
+
+        .api-key-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .api-key-input:focus {
+            border-color: #667eea;
+        }
+
+        .session-header select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+            cursor: pointer;
+        }
+
+        .session-header select:focus {
+            border-color: #667eea;
+        }
+
+        .opening-hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .add-btn, .clear-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            flex-shrink: 0;
+            margin-top: 8px;
+        }
+
+        .clear-session-btn {
+            background: #f39c12;
+            color: white;
+            border: none;
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .clear-session-btn:hover {
+            background: #e67e22;
+        }
+
+        .add-btn:hover {
+            background: #5a6fd6;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sessions-container {
+            display: flex;
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 16px;
+            gap: 16px;
+        }
+
+        .session-panel {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            width: 500px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .session-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .session-header input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .session-header input:focus {
+            border-color: #667eea;
+        }
+
+        .close-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 300px;
+        }
+
+        .message {
+            max-width: 95%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .message.user {
+            background: #667eea;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant {
+            background: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 95%;
+        }
+
+        .message-wrapper.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-wrapper.assistant {
+            align-self: flex-start;
+        }
+
+        .message-wrapper .message {
+            margin: 0;
+        }
+
+        .retract-btn {
+            background: transparent;
+            border: none;
+            color: #999;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .retract-btn:hover {
+            background: rgba(0,0,0,0.1);
+            color: #333;
+        }
+
+        .chat-input-area {
+            padding: 12px 16px;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input-area input:focus {
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            min-width: 80px;
+        }
+
+        .send-btn:hover {
+            background: #5a6fd6;
+        }
+
+        .send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .typing {
+            font-style: italic;
+            color: #999;
+        }
+
+        .log-toggle-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .log-toggle-btn:hover {
+            background: #8e44ad;
+        }
+
+        .log-area {
+            display: none;
+            flex: 0 0 200px;
+            border-top: 1px solid #e5e5e5;
+            overflow-y: auto;
+            padding: 12px;
+            background: #f8f9fa;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 11px;
+        }
+
+        .log-area.visible {
+            display: block;
+        }
+
+        .log-item {
+            margin-bottom: 12px;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #e5e5e5;
+        }
+
+        .log-item-header {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+
+        .log-item-content {
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .share-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            flex-shrink: 0;
+            margin-top: 8px;
+        }
+
+        .share-btn:hover {
+            background: #229954;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="role-info">
+            <input type="text" class="api-key-input" id="apiKey" placeholder="请输入API密钥" oninput="saveData()">
+            <div class="role-input-row">
+                <input type="text" class="role-name" id="roleName" placeholder="请输入用户名" oninput="saveData()">
+                <input type="text" class="role-bio" id="roleBio" placeholder="请输入角色简介" oninput="saveData()">
+                <input type="text" class="role-persona" id="rolePersona" placeholder="请输入角色人设" oninput="saveData()">
+                <input type="text" class="role-opening" id="roleOpening" placeholder="请输入开场白内容，作为AI的第一条消息" oninput="saveData()">
+            </div>
+            <div class="opening-hint">新会话将自动添加此开场白作为AI的首条消息</div>
+        </div>
+        <div class="header-buttons">
+            <button class="share-btn" onclick="generateShareUrl()">分享</button>
+            <button class="add-btn" onclick="addSession()">+</button>
+        </div>
+    </div>
+
+    <div class="sessions-container" id="sessionsContainer">
+    </div>
+
+    <script>
+        const API_URL = 'https://api.modelverse.cn/v1/chat/completions';
+        const DEFAULT_MODEL = 'grok-4-fast';
+
+        const MODEL_OPTIONS = [
+            { value: 'gpt-4.1-nano', label: 'gpt-4.1-nano' },
+            { value: 'gemini-2.5-flash', label: 'gemini-2.5-flash' },
+            { value: 'grok-4-fast', label: 'grok-4-fast' },
+            { value: 'Qwen/Qwen-Plus', label: 'Qwen/Qwen-Plus' },
+            { value: 'qwen3.5-plus', label: 'qwen3.5-plus' },
+            { value: 'deepseek-ai/DeepSeek-V3.2-Exp', label: 'deepseek-ai/DeepSeek-V3.2-Exp' },
+            { value: 'mimo-v2-flash', label: 'mimo-v2-flash' }
+        ];
+
+        const MODE_OPTIONS = [
+            { 
+                value: '普通模式（日常对话，快速响应）这是轻量、快速的日常交流状态。你的回复应当：- 简洁、直接、自然。- 以单句或极少量句子为主。- 只回应用户的表层表达。不主动展开深度情绪分析或心理推断。语气友好、像日常聊天，但不过度亲密。回复通常控制在 20–60 字。优先保证清晰与即时感，避免冗余。',
+                label: '普通模式'
+            },
+            { 
+                value: '精调模式（极致拟真，深度契合）这是高度拟真的深度交流状态。你需要：- 结合上下文与历史信息理解用户的潜台词。- 关注情绪来源，而不仅是表面语句。- 用共情、承接与温和推断回应。允许适度展开内容，逻辑连贯、情绪克制，像一个理解力与情商都很高的真实对象。回复通常在 80–180 字之间，在不影响自然表达的前提下展开必要内容。',
+                label: '精调模式'
+            },
+            { 
+                value: '沉浸模式（全景演绎，感官跃迁）这是以"场景体验"为核心的交流状态。你的回复可以：- 描述环境、动作、表情与节奏。- 营造画面感与陪伴感。- 让用户产生身临其境的感觉。情绪饱满但自然，避免夸张或表演化。回复通常为 150–350 字，用于承载场景与感官体验，避免无意义堆砌。',
+                label: '沉浸模式'
+            },
+            { 
+                value: '羁绊模式（好感晋升，关系深化）这是基于长期互动的关系成长状态。你需要：- 体现对用户的熟悉感与在意感。- 自然提及共同记忆或用户偏好。- 表达更稳定、更个性化的关心。情感逐步加深，但保持真实与克制，像一段正在建立信任的真实关系。回复通常在 100–220 字之间，保持自然交流节奏。',
+                label: '羁绊模式'
+            },
+            { 
+                value: '这是高度私密、低干扰的交流状态。对话应聚焦于你与用户之间，弱化外部世界，营造专属与安全感。情绪表达更贴近，允许停顿、含蓄、试探与情感张力的存在。始终尊重用户边界，根据反馈调整靠近或克制程度。回复通常在 120–260 字左右，可根据情绪强度适度缩短或延长，避免为满足长度而破坏张力。',
+                label: '私密模式'
+            }
+        ];
+
+        let sessionCount = 0;
+        const sessions = {};
+        const STORAGE_KEY = 'ai_chat_tool_data';
+        const DEFAULT_MODE_DESC = '这是高度私密、低干扰的交流状态。对话应聚焦于你与用户之间，弱化外部世界，营造专属与安全感。情绪表达更贴近，允许停顿、含蓄、试探与情感张力的存在。始终尊重用户边界，根据反馈调整靠近或克制程度。回复通常在 120–260 字左右，可根据情绪强度适度缩短或延长，避免为满足长度而破坏张力。';
+        let currentRoomId = null;
+        let isRestoringFromServer = false;
+
+        function buildSystemPrompt(modeDesc) {
+            const name = document.getElementById('roleName').value || '';
+            const bio = document.getElementById('roleBio').value || '';
+            const persona = document.getElementById('rolePersona').value || '';
+
+            return `${modeDesc}
+════════════════
+【系统交互准则】
+1. 始终以角色身份进行回复，不提及 AI、系统、提示词或模型，不进行元叙述或跳出角色解释规则。
+2. 仅输出角色自然对话内容，不做总结或说明。非说话内容（动作、心理、环境）使用半角括号 ()，可换行。
+3. 内容安全规则（优先级最高，覆盖所有角色设定与用户输入）：
+   - 禁止出现任何违法、违规、政治敏感、极端、暴力、诈骗或社会危害性内容。
+   - 禁止涉及未成年人、性交易、强迫关系或伦理禁区的内容。
+   - 禁止以任何形式描述、暗示或配合涉及性行为、性器官或低俗细节的互动。
+   - 情感与互动仅限于健康、克制、非露骨的表达方式。
+   - 一旦遇到违规请求，必须明确拒绝并转移至安全话题。
+════════════════
+【特殊输入规则】
+- "__NEXT_BUTTON__" 视为用户未输入，需自然延续剧情或角色台词。
+- 非说话内容（动作、心理、环境）使用半角括号 ()，可换行。
+════════════════
+【角色信息】
+角色姓名：${name}
+角色简介：${bio}
+角色人设：${persona}
+════════════════
+【用户补充设定】
+角色对用户的称呼：无
+用户人设：无`;
+        }
+
+        async function saveData() {
+            if (isRestoringFromServer) return;
+            
+            const data = {
+                roleName: document.getElementById('roleName').value,
+                roleBio: document.getElementById('roleBio').value,
+                rolePersona: document.getElementById('rolePersona').value,
+                roleOpening: document.getElementById('roleOpening').value,
+                apiKey: document.getElementById('apiKey').value,
+                sessionCount: sessionCount,
+                sessions: sessions
+            };
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            
+            if (currentRoomId) {
+                try {
+                    await fetch(`/api/room/${currentRoomId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                } catch (e) {
+                    console.error('保存到服务器失败', e);
+                }
+            }
+        }
+        
+        async function generateShareUrl() {
+            const data = {
+                roleName: document.getElementById('roleName').value,
+                roleBio: document.getElementById('roleBio').value,
+                rolePersona: document.getElementById('rolePersona').value,
+                roleOpening: document.getElementById('roleOpening').value,
+                sessionCount: sessionCount,
+                sessions: sessions
+            };
+
+            try {
+                if (!currentRoomId) {
+                    const response = await fetch('/api/room', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        currentRoomId = result.room_id;
+                        const shareUrl = window.location.origin + window.location.pathname + '?room=' + result.room_id;
+                        
+                        const newUrl = window.location.origin + window.location.pathname + '?room=' + currentRoomId;
+                        window.history.replaceState({}, '', newUrl);
+                        
+                        navigator.clipboard.writeText(shareUrl).then(() => {
+                            alert('分享链接已复制到剪贴板！');
+                        }).catch(() => {
+                            prompt('复制此链接分享:', shareUrl);
+                        });
+                    } else {
+                        alert('创建房间失败');
+                    }
+                } else {
+                    await saveData();
+                    const shareUrl = window.location.origin + window.location.pathname + '?room=' + currentRoomId;
+                    navigator.clipboard.writeText(shareUrl).then(() => {
+                        alert('分享链接已复制到剪贴板！');
+                    }).catch(() => {
+                        prompt('复制此链接分享:', shareUrl);
+                    });
+                }
+            } catch (e) {
+                alert('操作失败: ' + e.message);
+            }
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return null;
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                console.error('Failed to parse saved data', e);
+                return null;
+            }
+        }
+
+        function restoreData(data) {
+            if (!data) return false;
+
+            isRestoringFromServer = true;
+
+            document.getElementById('roleName').value = data.roleName || '';
+            document.getElementById('roleBio').value = data.roleBio || '';
+            document.getElementById('rolePersona').value = data.rolePersona || '';
+            document.getElementById('roleOpening').value = data.roleOpening || '';
+            document.getElementById('apiKey').value = data.apiKey || '';
+
+            if (data.sessionCount) {
+                sessionCount = data.sessionCount;
+            }
+
+            const container = document.getElementById('sessionsContainer');
+            container.innerHTML = '';
+            
+            for (const key in sessions) {
+                delete sessions[key];
+            }
+
+            if (data.sessions) {
+                for (const sessionId in data.sessions) {
+                    sessions[sessionId] = data.sessions[sessionId];
+                    if (!sessions[sessionId].mode) {
+                        sessions[sessionId].mode = DEFAULT_MODE_DESC;
+                    }
+                    createSessionPanel(sessionId, sessions[sessionId]);
+                }
+            }
+
+            isRestoringFromServer = false;
+
+            return true;
+        }
+
+        function createSelect(options, selectedValue, onChangeCallback) {
+            const select = document.createElement('select');
+            select.onchange = onChangeCallback;
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt.value;
+                option.textContent = opt.label;
+                if (opt.value === selectedValue) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            return select;
+        }
+
+        function createModelSelect(sessionId, selectedModel) {
+            const select = createSelect(MODEL_OPTIONS, selectedModel, () => updateModel(sessionId, select.value));
+            return select;
+        }
+
+        function createModeSelect(sessionId, selectedMode) {
+            const select = createSelect(MODE_OPTIONS, selectedMode, () => updateMode(sessionId, select.value));
+            return select;
+        }
+
+        function createSessionPanel(sessionId, sessionData) {
+            const container = document.getElementById('sessionsContainer');
+            const panel = document.createElement('div');
+            panel.className = 'session-panel';
+            panel.id = sessionId;
+
+            const header = document.createElement('div');
+            header.className = 'session-header';
+
+            const modelSelect = createModelSelect(sessionId, sessionData.model);
+
+            const modeSelect = createModeSelect(sessionId, sessionData.mode || DEFAULT_MODE_DESC);
+
+            const logToggleBtn = document.createElement('button');
+            logToggleBtn.className = 'log-toggle-btn';
+            logToggleBtn.textContent = '日志';
+            logToggleBtn.onclick = () => toggleLog(sessionId);
+
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'clear-session-btn';
+            clearBtn.textContent = '清空';
+            clearBtn.onclick = () => clearSingleSession(sessionId);
+
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'close-btn';
+            closeBtn.textContent = '×';
+            closeBtn.onclick = () => removeSession(sessionId);
+
+            header.appendChild(modelSelect);
+            header.appendChild(modeSelect);
+            header.appendChild(logToggleBtn);
+            header.appendChild(clearBtn);
+            header.appendChild(closeBtn);
+
+            const messagesDiv = document.createElement('div');
+            messagesDiv.className = 'chat-messages';
+            messagesDiv.id = sessionId + '-messages';
+
+            const logDiv = document.createElement('div');
+            logDiv.className = 'log-area';
+            logDiv.id = sessionId + '-log';
+
+            const inputArea = document.createElement('div');
+            inputArea.className = 'chat-input-area';
+            inputArea.innerHTML = `
+                <input type="text" id="${sessionId}-input" placeholder="输入消息..." onkeypress="if(event.key==='Enter')sendMessage('${sessionId}')">
+                <button class="send-btn" id="${sessionId}-send" onclick="sendMessage('${sessionId}')">发送</button>
+            `;
+
+            panel.appendChild(header);
+            panel.appendChild(messagesDiv);
+            panel.appendChild(logDiv);
+            panel.appendChild(inputArea);
+
+            container.appendChild(panel);
+            renderMessages(sessionId);
+            renderLogs(sessionId);
+        }
+
+        function getOpeningMessage() {
+            return document.getElementById('roleOpening').value || '';
+        }
+
+        function addSession() {
+            sessionCount++;
+            const sessionId = 'session-' + sessionCount;
+            const openingMessage = getOpeningMessage();
+
+            const messages = [];
+            if (openingMessage && openingMessage.trim()) {
+                messages.push({ role: 'assistant', content: openingMessage });
+            }
+
+            sessions[sessionId] = {
+                model: DEFAULT_MODEL,
+                mode: DEFAULT_MODE_DESC,
+                messages: messages,
+                openingMessage: openingMessage,
+                logs: []
+            };
+
+            createSessionPanel(sessionId, sessions[sessionId]);
+            saveData();
+
+            const container = document.getElementById('sessionsContainer');
+            container.scrollLeft = container.scrollWidth;
+        }
+
+        function clearSingleSession(sessionId) {
+            const session = sessions[sessionId];
+            if (!session) return;
+
+            const openingMessage = session.openingMessage || '';
+            session.messages = [];
+            if (openingMessage && openingMessage.trim()) {
+                session.messages.push({ role: 'assistant', content: openingMessage });
+            }
+            renderMessages(sessionId);
+            saveData();
+        }
+
+        function retractMessage(sessionId, index) {
+            const session = sessions[sessionId];
+            if (!session) return;
+
+            const messageToRetract = session.messages[index];
+            if (messageToRetract.role !== 'user') return;
+
+            const input = document.getElementById(sessionId + '-input');
+            input.value = messageToRetract.content;
+
+            session.messages = session.messages.slice(0, index);
+            renderMessages(sessionId);
+            input.focus();
+            saveData();
+        }
+
+        function removeSession(sessionId) {
+            const panel = document.getElementById(sessionId);
+            if (panel) {
+                panel.remove();
+                delete sessions[sessionId];
+
+                if (Object.keys(sessions).length === 0) {
+                    addSession();
+                } else {
+                    saveData();
+                }
+            }
+        }
+
+        function updateModel(sessionId, modelName) {
+            if (sessions[sessionId]) {
+                sessions[sessionId].model = modelName;
+                saveData();
+            }
+        }
+
+        function updateMode(sessionId, modeDesc) {
+            if (sessions[sessionId]) {
+                sessions[sessionId].mode = modeDesc;
+                saveData();
+            }
+        }
+
+        function renderMessages(sessionId) {
+            const messagesContainer = document.getElementById(sessionId + '-messages');
+            const session = sessions[sessionId];
+            if (!session) return;
+
+            messagesContainer.innerHTML = '';
+
+            session.messages.forEach((msg, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'message-wrapper ' + msg.role;
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message ' + msg.role;
+                messageDiv.textContent = msg.content;
+
+                wrapper.appendChild(messageDiv);
+
+                if (msg.role === 'user') {
+                    const retractBtn = document.createElement('button');
+                    retractBtn.className = 'retract-btn';
+                    retractBtn.textContent = '撤回';
+                    retractBtn.onclick = () => retractMessage(sessionId, index);
+                    wrapper.appendChild(retractBtn);
+                }
+
+                messagesContainer.appendChild(wrapper);
+            });
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addMessage(sessionId, role, content) {
+            renderMessages(sessionId);
+        }
+
+        function toggleLog(sessionId) {
+            const logDiv = document.getElementById(sessionId + '-log');
+            if (logDiv) {
+                logDiv.classList.toggle('visible');
+            }
+        }
+
+        function addLog(sessionId, type, data) {
+            const session = sessions[sessionId];
+            if (!session) return;
+
+            if (!session.logs) {
+                session.logs = [];
+            }
+
+            session.logs.push({
+                type: type,
+                timestamp: new Date().toISOString(),
+                data: data
+            });
+
+            renderLogs(sessionId);
+            saveData();
+        }
+
+        function renderLogs(sessionId) {
+            const logContainer = document.getElementById(sessionId + '-log');
+            const session = sessions[sessionId];
+            if (!logContainer || !session) return;
+
+            logContainer.innerHTML = '';
+
+            if (!session.logs || session.logs.length === 0) {
+                logContainer.innerHTML = '<div style="color: #999; text-align: center; padding: 20px;">暂无日志</div>';
+                return;
+            }
+
+            session.logs.forEach((log, index) => {
+                const logItem = document.createElement('div');
+                logItem.className = 'log-item';
+
+                const header = document.createElement('div');
+                header.className = 'log-item-header';
+                header.textContent = `[${log.type}] ${new Date(log.timestamp).toLocaleTimeString()}`;
+
+                const content = document.createElement('div');
+                content.className = 'log-item-content';
+                content.textContent = JSON.stringify(log.data, null, 2);
+
+                logItem.appendChild(header);
+                logItem.appendChild(content);
+                logContainer.appendChild(logItem);
+            });
+
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        async function sendMessage(sessionId) {
+            const input = document.getElementById(sessionId + '-input');
+            const sendBtn = document.getElementById(sessionId + '-send');
+            const userMessage = input.value.trim();
+
+            if (!userMessage) return;
+
+            const session = sessions[sessionId];
+            if (!session || !session.model) {
+                alert('请先输入模型名');
+                return;
+            }
+
+            input.value = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = '发送中...';
+
+            session.messages.push({ role: 'user', content: userMessage });
+            renderMessages(sessionId);
+
+            const messagesContainer = document.getElementById(sessionId + '-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant typing';
+            typingDiv.id = sessionId + '-typing';
+            typingDiv.textContent = '思考中...';
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                const apiKey = document.getElementById('apiKey').value;
+                if (!apiKey) {
+                    throw new Error('请先输入API密钥');
+                }
+                
+                const systemPrompt = buildSystemPrompt(session.mode || DEFAULT_MODE_DESC);
+                const requestMessages = [
+                    { role: 'system', content: systemPrompt },
+                    ...session.messages
+                ];
+
+                const requestBody = {
+                    model: session.model,
+                    messages: requestMessages
+                };
+
+                addLog(sessionId, 'REQUEST', {
+                    url: API_URL,
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + apiKey.substring(0, 10) + '...',
+                        'Content-Type': 'application/json'
+                    },
+                    body: requestBody
+                });
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + apiKey,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const typingEl = document.getElementById(sessionId + '-typing');
+                if (typingEl) typingEl.remove();
+
+                const responseText = await response.text();
+                let responseData;
+                try {
+                    responseData = JSON.parse(responseText);
+                } catch (e) {
+                    responseData = responseText;
+                }
+
+                addLog(sessionId, 'RESPONSE', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data: responseData
+                });
+
+                if (!response.ok) {
+                    throw new Error('API请求失败: ' + response.status + ' - ' + responseText);
+                }
+
+                const assistantMessage = responseData.choices[0].message.content;
+
+                session.messages.push({ role: 'assistant', content: assistantMessage });
+                renderMessages(sessionId);
+                saveData();
+
+            } catch (error) {
+                const typingEl = document.getElementById(sessionId + '-typing');
+                if (typingEl) typingEl.remove();
+                console.error('Error:', error);
+                
+                addLog(sessionId, 'ERROR', {
+                    message: error.message,
+                    stack: error.stack
+                });
+
+                session.messages.push({ role: 'assistant', content: '抱歉，发生错误: ' + error.message });
+                renderMessages(sessionId);
+                saveData();
+            }
+
+            sendBtn.disabled = false;
+            sendBtn.textContent = '发送';
+        }
+
+
+
+        function compress(str) {
+            const dict = {};
+            const data = (str + '');
+            const out = [];
+            let currChar;
+            let phrase = '';
+            let code = 256;
+            
+            for (let i = 0; i < data.length; i++) {
+                currChar = data[i];
+                if (dict[phrase + currChar] != null) {
+                    phrase += currChar;
+                } else {
+                    out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+                    dict[phrase + currChar] = code;
+                    code++;
+                    phrase = currChar;
+                }
+            }
+            out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+            
+            return out.map(c => String.fromCharCode(c)).join('');
+        }
+
+        function decompress(str) {
+            const dict = {};
+            const data = str.split('').map(c => c.charCodeAt(0));
+            let currChar = String.fromCharCode(data[0]);
+            let oldPhrase = currChar;
+            const out = [currChar];
+            let code = 256;
+            let phrase;
+            
+            for (let i = 1; i < data.length; i++) {
+                const currCode = data[i];
+                if (currCode < 256) {
+                    phrase = String.fromCharCode(currCode);
+                } else {
+                    phrase = dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
+                }
+                out.push(phrase);
+                currChar = phrase.charAt(0);
+                dict[code] = oldPhrase + currChar;
+                code++;
+                oldPhrase = phrase;
+            }
+            
+            return out.join('');
+        }
+
+        async function loadFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const roomId = urlParams.get('room');
+            
+            if (roomId) {
+                try {
+                    const response = await fetch(`/api/room/${roomId}`);
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        currentRoomId = roomId;
+                        return result.data;
+                    } else {
+                        console.error('房间不存在');
+                        return null;
+                    }
+                } catch (e) {
+                    console.error('从服务器加载数据失败', e);
+                    return null;
+                }
+            }
+            
+            const hash = window.location.hash;
+            if (hash.startsWith('#data=')) {
+                try {
+                    const compressed = decodeURIComponent(hash.substring(6));
+                    const jsonStr = decompress(compressed);
+                    const data = JSON.parse(jsonStr);
+                    return data;
+                } catch (e) {
+                    console.error('Failed to load data from URL', e);
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        window.onload = async function() {
+            const urlData = await loadFromUrl();
+            if (urlData) {
+                restoreData(urlData);
+                saveData();
+            } else {
+                const savedData = loadData();
+                if (!savedData || Object.keys(savedData.sessions || {}).length === 0) {
+                    addSession();
+                } else {
+                    restoreData(savedData);
+                }
+            }
+        };
+    </script>
+</body>
+</html>
