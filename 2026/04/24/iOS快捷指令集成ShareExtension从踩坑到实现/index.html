@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="如何在iOS快捷指令中集成第三方App的ShareExtension，通过预绑定签名.shortcut文件实现截屏自动分享分析功能">
+    <meta name="keyword"  content="iOS, Shortcuts, ShareExtension, 快捷指令, .shortcut文件, AppIntents">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          iOS快捷指令集成ShareExtension：从踩坑到实现 - 杜文杰 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://duwenjie.site/2026/04/24/iOS快捷指令集成ShareExtension从踩坑到实现/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS --> 
+    
+<link rel="stylesheet" href="/css/beantech.min.css">
+
+
+    
+<link rel="stylesheet" href="/css/donate.css">
+
+
+    
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    
+<link rel="stylesheet" href="/css/widget.css">
+
+
+    
+<link rel="stylesheet" href="/css/rocket.css">
+
+
+    
+<link rel="stylesheet" href="/css/signature.css">
+
+
+    
+<link rel="stylesheet" href="/css/toc.css">
+
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                            
+                              <a class="tag" href="/tags/#Shortcuts" title="Shortcuts">Shortcuts</a>
+                            
+                              <a class="tag" href="/tags/#ShareExtension" title="ShareExtension">ShareExtension</a>
+                            
+                        </div>
+                        <h1>iOS快捷指令集成ShareExtension：从踩坑到实现</h1>
+                        <h2 class="subheading">三天踩坑实录：第三方App如何让ShareExtension出现在快捷指令中</h2>
+                        <span class="meta">
+                            Posted by 杜文杰 on
+                            2026-04-24
+                        </span>
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">杜文杰</a>
+        </div>
+
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                        <li>
+                            <a href="/about/">about me</a>
+                        </li>
+                        
+
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            setTimeout(function(){
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+                
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2>
+<p>我们的App（下称App A）有一个核心功能：用户截图后，通过ShareExtension将截图分享到App中进行AI分析并自动生成回复。我们希望用户能通过<strong>iOS快捷指令</strong>一键完成「截屏 → 分享到App A」的自动化流程，就像竞品（下称App B）那样。</p>
+<p>竞品的快捷指令长这样：</p>
+<ul>
+<li>第一步：截屏</li>
+<li>第二步：与<strong>【App B】</strong>共享<strong>【截屏】</strong></li>
+</ul>
+<p>其中【App B】是一个可点击的参数，点击后显示App图标和名称；【截屏】连接了上一步的输出。整个流程非常优雅，用户体验极佳。</p>
+<p>然而，就是这样一个看似简单的需求，让我踩了整整三天的坑。本文将完整记录踩坑过程和最终解决方案。</p>
+
+<h2 id="踩坑之路"><a href="#踩坑之路" class="headerlink" title="踩坑之路"></a>踩坑之路</h2>
+
+<h3 id="坑1-ShareExtension不出现在快捷指令的分享操作列表中"><a href="#坑1-ShareExtension不出现在快捷指令的分享操作列表中" class="headerlink" title="坑1：ShareExtension不出现在快捷指令的"分享"操作列表中"></a>坑1：ShareExtension不出现在快捷指令的"分享"操作列表中</h3>
+<p>最初的想法很直接：在快捷指令中添加"分享"操作，然后从App列表中选择App A的ShareExtension。</p>
+<p>但现实是：<strong>第三方App根本无法出现在快捷指令"分享"操作的App列表中</strong>。这个列表只显示系统自带的应用（信息、邮件等）。Apple的工程师在开发者论坛中也确认了这一点——这是系统限制，非系统App无法出现在该列表。</p>
+<p>我尝试了各种方法：</p>
+<ul>
+<li>修改 <code>NSExtensionActivationRule</code> 确保扩展能接收图片</li>
+<li>将 <code>NSExtensionPointIdentifier</code> 从 <code>com.apple.share-services</code> 改为 <code>com.apple.ui-services</code>（Action Extension）</li>
+<li>在设备上运行一次ShareExtension，让系统"记住"它</li>
+</ul>
+<p>结果都一样：列表里只有系统App，App A永远不会出现。</p>
+
+<h3 id="坑2-AppIntents打开的是主App而不是ShareExtension"><a href="#坑2-AppIntents打开的是主App而不是ShareExtension" class="headerlink" title="坑2：AppIntents打开的是主App而不是ShareExtension"></a>坑2：AppIntents打开的是主App而不是ShareExtension</h3>
+<p>既然无法通过"分享"操作选择第三方App，那能不能用AppIntents框架自定义一个快捷指令操作？</p>
+<p>我实现了 <code>ShareImageIntent</code>，遵循 <code>AppIntents</code> 协议：</p>
+<pre><code class="language-swift">struct ShareImageIntent: AppIntent {
+    static var title: LocalizedStringResource = "共享截屏"
+    static var description = IntentDescription("将截屏分享到App A进行分析")
+    
+    @Parameter(title: "截屏")
+    var image: IntentFile
+    
+    static var parameterSummary: some ParameterSummary {
+        Summary("与App A共享\(\.$image)")
+    }
+    
+    func perform() async throws -> some IntentResult {
+        // 打开主App处理
+    }
+}</code></pre>
+<p>快捷指令中确实能搜到「与App A共享【截屏】」，格式也对。但有一个致命问题：<strong>AppIntent执行时打开的是主App，而不是ShareExtension的半屏界面</strong>。</p>
+<p>竞品打开的是ShareExtension那种从底部弹出的半屏UI，体验非常流畅；而AppIntent会切到主App，体验断裂。这是两条完全不同的技术路线：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>UI形式</th>
+<th>用户感知</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AppIntent</td>
+<td>跳转主App全屏</td>
+<td>离开当前应用，体验断裂</td>
+</tr>
+<tr>
+<td>ShareExtension</td>
+<td>底部弹出半屏</td>
+<td>不离开当前应用，体验流畅</td>
+</tr>
+</tbody>
+<p>用户明确要求必须用ShareExtension方式。</p>
+
+<h3 id="坑3-竞品也不是从列表里选出来的"><a href="#坑3-竞品也不是从列表里选出来的" class="headerlink" title="坑3：竞品也不是从列表里选出来的"></a>坑3：竞品也不是从列表里选出来的</h3>
+<p>仔细观察竞品的快捷指令后发现一个关键细节：<strong>竞品的App名称【App B】并不是从"分享"操作的App列表中选出来的，而是预先绑定在快捷指令文件中的</strong>。一旦绑定了，就无法再切换——即便切换到其他App，也无法再切回来，因为列表里根本找不到。</p>
+<p>这意味着竞品的方案是：<strong>通过预编译的 .shortcut 文件，将App信息直接写死在快捷指令中</strong>。</p>
+
+<h3 id="坑4-未签名的shortcut文件无法在iOS-15-上导入"><a href="#坑4-未签名的shortcut文件无法在iOS-15-上导入" class="headerlink" title="坑4：未签名的.shortcut文件无法在iOS 15+上导入"></a>坑4：未签名的.shortcut文件无法在iOS 15+上导入</h3>
+<p>明确了方向后，我开始尝试生成 .shortcut 文件。iOS快捷指令的文件格式是 <code>.shortcut</code>，本质上是一个签名后的AEA1容器，内含二进制plist格式的 <code>WFWorkflow</code> 结构。</p>
+<p>我用Python生成了未签名的 .shortcut 文件（本质就是一个plist），然后在iPhone上尝试导入，结果报错：</p>
+<blockquote>
+<p>无法打开快捷指令<br>不支持导入未签名的快捷指令选项，请使用其他共享选项</p>
+</blockquote>
+<p>iOS 15+ 要求 .shortcut 文件必须经过签名才能导入。</p>
+
+<h3 id="坑5-macOS-shortcuts-sign-会清空操作内容"><a href="#坑5-macOS-shortcuts-sign-会清空操作内容" class="headerlink" title="坑5：macOS shortcuts sign 会清空操作内容"></a>坑5：macOS <code>shortcuts sign</code> 会清空操作内容</h3>
+<p>macOS 提供了签名工具：</p>
+<pre><code class="language-bash">shortcuts sign -i input.shortcut -o output.shortcut -m mode</code></pre>
+<p>我先用 <code>is.workflow.actions.share</code> 作为操作标识符生成文件，然后签名。签名后文件确实可以导入了，但打开一看：<strong>所有操作内容都是空的</strong>！签名过程把所有操作都清掉了。</p>
+<p>这是一个已知的Bug：<code>shortcuts sign</code> 在处理 <code>is.workflow.actions.share</code> 操作时，会丢弃所有操作参数。</p>
+
+<h2 id="破局-逆向分析竞品的shortcut文件"><a href="#破局-逆向分析竞品的shortcut文件" class="headerlink" title="破局：逆向分析竞品的.shortcut文件"></a>破局：逆向分析竞品的.shortcut文件</h2>
+
+<p>既然正向生成总是踩坑，我决定从竞品的 .shortcut 文件入手，逆向分析它的结构。</p>
+
+<h3 id="安装shortcut-sign工具"><a href="#安装shortcut-sign工具" class="headerlink" title="安装shortcut-sign工具"></a>安装shortcut-sign工具</h3>
+<p>在GitHub上找到了 <a href="https://github.com/0xilis/shortcut-sign" target="_blank" rel="noopener">shortcut-sign</a> 工具，它可以解包和重新打包签名后的 .shortcut 文件。</p>
+<pre><code class="language-bash"># 安装依赖
+brew install libplist
+
+# 克隆并编译
+git clone https://github.com/0xilis/shortcut-sign.git
+cd shortcut-sign
+make</code></pre>
+
+<h3 id="解包竞品文件"><a href="#解包竞品文件" class="headerlink" title="解包竞品文件"></a>解包竞品文件</h3>
+<pre><code class="language-bash">./shortcut-sign -i "AppB_AutoReply.shortcut" -e -o /tmp/appb_extracted.shortcut</code></pre>
+<p>解包后得到一个二进制plist文件，用 <code>plutil</code> 转换为XML格式查看：</p>
+<pre><code class="language-bash">plutil -convert xml1 /tmp/appb_extracted.shortcut -o /tmp/appb_extracted.plist</code></pre>
+
+<h3 id="关键发现"><a href="#关键发现" class="headerlink" title="关键发现"></a>关键发现</h3>
+<p>分析竞品的plist后，发现了几个关键差异：</p>
+
+<p><strong>1. 操作标识符是 <code>is.workflow.actions.runextension</code>，不是 <code>is.workflow.actions.share</code></strong></p>
+<p>竞品使用的是 <code>runextension</code>，而不是我之前用的 <code>share</code>。这才是ShareExtension在快捷指令中的正确标识符！</p>
+
+<p><strong>2. App绑定使用 <code>WFApp</code> 字典，不是简单的 <code>WFAppIdentifier</code> 字符串</strong></p>
+<pre><code class="language-xml">&lt;key&gt;WFApp&lt;/key&gt;
+&lt;dict&gt;
+    &lt;key&gt;BundleIdentifier&lt;/key&gt;
+    &lt;string&gt;com.app.b&lt;/string&gt;
+    &lt;key&gt;Name&lt;/key&gt;
+    &lt;string&gt;App B&lt;/string&gt;
+    &lt;key&gt;TeamIdentifier&lt;/key&gt;
+    &lt;string&gt;TEAMIDBXXXXX&lt;/string&gt;
+&lt;/dict&gt;</code></pre>
+
+<p><strong>3. 输入参数使用 <code>WFTextTokenAttachment</code> 序列化方式连接上一步输出</strong></p>
+<pre><code class="language-xml">&lt;key&gt;WFInput&lt;/key&gt;
+&lt;dict&gt;
+    &lt;key&gt;Value&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;OutputUUID&lt;/key&gt;
+        &lt;string&gt;截屏操作的UUID&lt;/string&gt;
+        &lt;key&gt;Type&lt;/key&gt;
+        &lt;string&gt;ActionOutput&lt;/string&gt;
+        &lt;key&gt;OutputName&lt;/key&gt;
+        &lt;string&gt;截屏&lt;/string&gt;
+    &lt;/dict&gt;
+    &lt;key&gt;WFSerializationType&lt;/key&gt;
+    &lt;string&gt;WFTextTokenAttachment&lt;/string&gt;
+&lt;/dict&gt;</code></pre>
+
+<p><strong>4. 更关键的是：<code>shortcuts sign</code> 不会清空 <code>runextension</code> 操作！</strong></p>
+<p>之前用 <code>share</code> 操作会被清空，但用 <code>runextension</code> 操作在签名后完整保留——这才是正确的操作标识符。</p>
+
+<h2 id="最终方案-生成预绑定的签名shortcut文件"><a href="#最终方案-生成预绑定的签名shortcut文件" class="headerlink" title="最终方案：生成预绑定的签名.shortcut文件"></a>最终方案：生成预绑定的签名.shortcut文件</h2>
+
+<h3 id="完整Python生成脚本"><a href="#完整Python生成脚本" class="headerlink" title="完整Python生成脚本"></a>完整Python生成脚本</h3>
+<p>基于逆向分析的结论，我编写了最终的生成脚本：</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+import plistlib
+import uuid
+import subprocess
+import os
+
+# UUID
+screenshot_uuid = str(uuid.uuid4()).upper()
+share_uuid = str(uuid.uuid4()).upper()
+
+# 构建WFWorkflow结构
+workflow = {
+    'WFWorkflowMinimumClientVersionString': '900',
+    'WFWorkflowMinimumClientVersion': 900,
+    'WFWorkflowActions': [
+        # 第一步：截屏
+        {
+            'WFWorkflowActionIdentifier': 'is.workflow.actions.takescreenshot',
+            'WFWorkflowActionParameters': {
+                'UUID': screenshot_uuid
+            }
+        },
+        # 第二步：通过扩展共享（关键！用runextension而不是share）
+        {
+            'WFWorkflowActionIdentifier': 'is.workflow.actions.runextension',
+            'WFWorkflowActionParameters': {
+                # 使用WFTextTokenAttachment连接上一步的截屏输出
+                'WFInput': {
+                    'Value': {
+                        'OutputUUID': screenshot_uuid,
+                        'Type': 'ActionOutput',
+                        'OutputName': '截屏',
+                    },
+                    'WFSerializationType': 'WFTextTokenAttachment',
+                },
+                # 预绑定App信息（关键！）
+                'WFApp': {
+                    'BundleIdentifier': 'com.app.a',
+                    'Name': 'App A',
+                    'TeamIdentifier': 'TEAMIDAXXXXX',  # 你的Team ID
+                },
+                'CustomOutputName': 'Share with Extensions',
+                'UUID': share_uuid,
+                'WFAppIdentifier': 'com.app.a',
+            }
+        },
+    ],
+    'WFWorkflowClientVersion': '900',
+    'WFWorkflowClientRelease': '2.0',
+    'WFWorkflowIcon': {
+        'WFWorkflowIconStartColor': 2071128575,
+        'WFWorkflowIconGlyphNumber': 59511,
+    },
+    'WFWorkflowImportQuestions': [],
+    'WFWorkflowTypes': ['NCWidget', 'WatchKit'],
+    'WFWorkflowNoInputBehavior': {
+        'Type': 'NoInput',
+    },
+}
+
+# 写入未签名的plist
+unsigned_path = '/tmp/unsigned.shortcut'
+signed_path = '/tmp/signed.shortcut'
+
+with open(unsigned_path, 'wb') as f:
+    plistlib.dump(workflow, f, fmt=plistlib.FMT_BINARY)
+
+# 使用macOS shortcuts命令签名
+# -m people 模式不需要额外的签名证书
+subprocess.run([
+    'shortcuts', 'sign',
+    '-i', unsigned_path,
+    '-o', signed_path,
+    '-m', 'people'
+], check=True)
+
+print(f'签名后的文件: {signed_path}')
+print('将此文件放入App的Bundle中，即可在App内引导用户安装快捷指令')</code></pre>
+
+<h3 id="核心要点总结"><a href="#核心要点总结" class="headerlink" title="核心要点总结"></a>核心要点总结</h3>
+
+<h4 id="1-runextension-vs-share"><a href="#1-runextension-vs-share" class="headerlink" title="1. runextension vs share"></a>1. <code>runextension</code> vs <code>share</code></h4>
+<table>
+<thead>
+<tr>
+<th>操作标识符</th>
+<th>签名后结果</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>is.workflow.actions.share</code></td>
+<td>操作被清空</td>
+<td>系统分享菜单，第三方无法使用</td>
+</tr>
+<tr>
+<td><code>is.workflow.actions.runextension</code></td>
+<td>操作完整保留</td>
+<td>运行ShareExtension，第三方可用</td>
+</tr>
+</tbody>
+<p>这是最关键的发现：<strong>必须使用 <code>is.workflow.actions.runextension</code></strong>。</p>
+
+<h4 id="2-WFApp预绑定"><a href="#2-WFApp预绑定" class="headerlink" title="2. WFApp预绑定"></a>2. <code>WFApp</code>预绑定</h4>
+<p>第三方App无法通过快捷指令UI选择，必须在 .shortcut 文件中预绑定App信息：</p>
+<pre><code class="language-python">'WFApp': {
+    'BundleIdentifier': '你的BundleID',
+    'Name': '你的App名称',
+    'TeamIdentifier': '你的TeamID',
+}</code></pre>
+<p>绑定后，用户在快捷指令中看到的就是「与【你的App】共享【截屏】」，App名称可点击显示详情，但无法更改。</p>
+
+<h4 id="3-WFTextTokenAttachment数据流连接"><a href="#3-WFTextTokenAttachment数据流连接" class="headerlink" title="3. WFTextTokenAttachment数据流连接"></a>3. <code>WFTextTokenAttachment</code>数据流连接</h4>
+<p>快捷指令中操作之间的数据传递通过 <code>WFTextTokenAttachment</code> 序列化实现。截屏操作的输出需要通过 <code>OutputUUID</code> 引用传递给下一步的输入：</p>
+<pre><code class="language-python">'WFInput': {
+    'Value': {
+        'OutputUUID': screenshot_uuid,  # 引用截屏操作的UUID
+        'Type': 'ActionOutput',
+        'OutputName': '截屏',
+    },
+    'WFSerializationType': 'WFTextTokenAttachment',
+}</code></pre>
+
+<h4 id="4-签名模式"><a href="#4-签名模式" class="headerlink" title="4. 签名模式"></a>4. 签名模式</h4>
+<p><code>shortcuts sign</code> 支持 <code>-m people</code> 模式，不需要开发者证书，任何人都可以签名。签名后的文件可以直接在iOS上导入使用。</p>
+
+<h2 id="整体技术方案"><a href="#整体技术方案" class="headerlink" title="整体技术方案"></a>整体技术方案</h2>
+
+<p>最终的完整方案如下：</p>
+<ol>
+<li><strong>App端</strong>：配置ShareExtension，确保 <code>NSExtensionActivationRule</code> 支持图片类型</li>
+<li><strong>生成端</strong>：用Python脚本生成 <code>.shortcut</code> 文件，预绑定App信息，使用 <code>runextension</code> 操作</li>
+<li><strong>签名端</strong>：用 <code>shortcuts sign</code> 签名文件</li>
+<li><strong>分发端</strong>：将签名的 .shortcut 文件放入App Bundle，在App内引导用户安装快捷指令</li>
+</ol>
+
+<p>ShareExtension的 <code>Info.plist</code> 关键配置：</p>
+<pre><code class="language-xml">&lt;key&gt;NSExtension&lt;/key&gt;
+&lt;dict&gt;
+    &lt;key&gt;NSExtensionAttributes&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;NSExtensionActivationRule&lt;/key&gt;
+        &lt;dict&gt;
+            &lt;key&gt;NSExtensionActivationSupportsImageWithMaxCount&lt;/key&gt;
+            &lt;integer&gt;1&lt;/integer&gt;
+            &lt;key&gt;NSExtensionActivationSupportsFileWithMaxCount&lt;/key&gt;
+            &lt;integer&gt;1&lt;/integer&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+    &lt;key&gt;NSExtensionMainStoryboard&lt;/key&gt;
+    &lt;string&gt;ShareExtensionViewController&lt;/string&gt;
+    &lt;key&gt;NSExtensionPointIdentifier&lt;/key&gt;
+    &lt;string&gt;com.apple.share-services&lt;/string&gt;
+    &lt;key&gt;NSExtensionPrincipalClass&lt;/key&gt;
+    &lt;string&gt;ShareExtension.ViewController&lt;/string&gt;
+&lt;/dict&gt;</code></pre>
+
+<h2 id="踩坑时间线"><a href="#踩坑时间线" class="headerlink" title="踩坑时间线"></a>踩坑时间线</h2>
+
+<table>
+<thead>
+<tr>
+<th>天数</th>
+<th>尝试方向</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Day 1</td>
+<td>让ShareExtension出现在快捷指令"分享"操作列表</td>
+<td>❌ 系统限制，第三方App无法出现在列表</td>
+</tr>
+<tr>
+<td>Day 1</td>
+<td>用AppIntent自定义操作</td>
+<td>❌ 打开主App，不是ShareExtension</td>
+</tr>
+<tr>
+<td>Day 2</td>
+<td>生成未签名的.shortcut文件</td>
+<td>❌ iOS 15+不支持导入未签名文件</td>
+</tr>
+<tr>
+<td>Day 2</td>
+<td>用<code>is.workflow.actions.share</code>生成并签名</td>
+<td>❌ 签名后操作被清空</td>
+</tr>
+<tr>
+<td>Day 3</td>
+<td>逆向竞品.shortcut文件</td>
+<td>✅ 发现<code>runextension</code>和<code>WFApp</code>字典</td>
+</tr>
+<tr>
+<td>Day 3</td>
+<td>用<code>is.workflow.actions.runextension</code>生成并签名</td>
+<td>✅ 签名后操作完整保留</td>
+</tr>
+</tbody>
+
+<h2 id="参考工具"><a href="#参考工具" class="headerlink" title="参考工具"></a>参考工具</h2>
+
+<ul>
+<li><a href="https://github.com/0xilis/shortcut-sign" target="_blank" rel="noopener">shortcut-sign</a> - 用于解包/重新打包签名后的 .shortcut 文件</li>
+<li><code>shortcuts sign</code> - macOS自带签名工具</li>
+<li><code>plutil</code> - macOS自带plist转换工具</li>
+</ul>
+
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2>
+
+<p>这个需求看似简单——"让ShareExtension出现在快捷指令里"，实际上涉及了iOS快捷指令文件格式的逆向分析、操作标识符的正确选择、数据流序列化方式的理解、以及签名工具的Bug规避。</p>
+
+<p>最大的收获是：当正向文档和API无法解决问题时，逆向分析竞品的实现往往是最直接的出路。Apple在快捷指令领域对第三方App的支持非常有限，官方文档也几乎没有涉及 <code>runextension</code> 这种操作标识符。如果不是逆向分析竞品的文件，我可能永远不知道该用 <code>runextension</code> 而不是 <code>share</code>。</p>
+
+<p>希望这篇文章能帮到同样遇到这个问题的iOS开发者，少走一些弯路。</p>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/09/16/日志回捞SDK/" data-toggle="tooltip" data-placement="top" title="日志回捞SDK">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#iOS" title="iOS">iOS</a>
+                        
+                          <a class="tag" href="/tags/#Shortcuts" title="Shortcuts">Shortcuts</a>
+                        
+                          <a class="tag" href="/tags/#ShareExtension" title="ShareExtension">ShareExtension</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+                document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/MoonSoilWJ">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 杜文杰 2026 
+                    <br>
+                    Theme by <a href="http://beantech.org" target="_blank" rel="noopener">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com" target="_blank" rel="noopener">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://du-wenjie.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://du-wenjie.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
