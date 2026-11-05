@@ -1,181 +1,356 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lingo实时翻译</title>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/jquery.fullPage.css">
-    <style>
-        nav {
-            position: fixed;
-            z-index: 999;
-            top: 0;
-            left: 100px;
-            width:200px
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lingo · 实时语音翻译 App - 杜文杰</title>
+<meta name="description" content="Lingo：对着说话即时翻译的 Android App，出国旅行、跨语言交流用。v4.1.4 APK 直接下载。">
+<meta name="theme-color" content="#05060a">
+<link rel="icon" href="./icon.png">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-        a {
-            text-decoration: none;
-            color: #000;
-        }
+  :root{
+    --bg:#05060a;
+    --fg:#e8ecf4;
+    --dim:#7a8296;
+    --brand:#4f7cff;
+    --brand-rgb:79,124,255;
+    --line:rgba(255,255,255,.08);
+  }
 
-        .logo span {
-            margin-left: 27px;
-            font-size: 24px;
-            font-weight: 500;
-            color: #000;
-        }
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    min-height:100vh;
+    position:relative;
+  }
 
-        .serve-translate {
-            background-color: #fff;
-        }
+  /* 背景光晕 */
+  .aurora{
+    position:fixed;inset:-20%;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(40vw 40vw at 22% 12%, rgba(79,124,255,.18), transparent 62%),
+      radial-gradient(44vw 44vw at 82% 20%, rgba(0,166,81,.08), transparent 64%),
+      radial-gradient(46vw 46vw at 50% 100%, rgba(79,124,255,.10), transparent 66%);
+    filter:blur(46px);
+    animation:drift 24s ease-in-out infinite alternate;
+  }
+  @keyframes drift{
+    0%{transform:translate3d(0,0,0) scale(1)}
+    50%{transform:translate3d(2%,-2%,0) scale(1.06)}
+    100%{transform:translate3d(-2%,2%,0) scale(1.02)}
+  }
+  .grid{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(to right,rgba(255,255,255,.03) 1px,transparent 1px),
+      linear-gradient(to bottom,rgba(255,255,255,.03) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 10%,transparent 76%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 10%,transparent 76%);
+  }
 
-        footer {
-            margin-top: 112px;
-        }
+  .wrap{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:clamp(24px,5vw,56px)}
 
-        #fp-nav ul li a span,
-        .fp-slidesNav ul li a span {
-            top: 0px;
-            left: 0px;
-            width: 12px;
-            height: 12px;
-            border-radius: 0;
-            position: absolute;
-            z-index: 1;
-            border-radius: 50%;
-            border: 1px solid #000;
-        }
-        .logoImg{display: block;width:50px;margin:0;}
-        #jpdown-page .product-content img{width:300px;top:150px}
-        .text{margin:100px 0 0 0 ;}
-    </style>
+  /* 顶栏 */
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    opacity:0;animation:fadeUp .8s .1s ease forwards;
+  }
+  .nav .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .nav .logo img{width:30px;height:30px;border-radius:7px;display:block}
+  .nav .ver{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:10.5px;letter-spacing:.12em;color:var(--dim);
+    border:1px solid var(--line);border-radius:99px;padding:5px 12px;
+  }
+
+  /* Hero */
+  .hero{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);
+    gap:clamp(28px,5vw,64px);align-items:center;
+    margin-top:clamp(40px,9vh,90px);
+  }
+  @media (max-width:760px){ .hero{grid-template-columns:1fr} }
+
+  .hero .eyebrow{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--brand);
+    display:flex;align-items:center;gap:12px;margin-bottom:18px;
+    opacity:0;animation:fadeUp .8s .25s ease forwards;
+  }
+  .hero .eyebrow::before{content:"";width:32px;height:1px;background:linear-gradient(90deg,var(--brand),transparent)}
+
+  .hero h1{
+    font-size:clamp(34px,6vw,56px);font-weight:800;letter-spacing:-.03em;line-height:1.12;
+    margin-bottom:16px;
+    opacity:0;animation:fadeUp .9s .35s ease forwards;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(112deg,var(--brand),#7aa0ff 55%,#3fd68f);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-size:220% 100%;
+    animation:shine 8s linear infinite;
+  }
+  @keyframes shine{0%{background-position:0% 50%}100%{background-position:220% 50%}}
+
+  .hero .sub{
+    font-size:clamp(14px,1.8vw,16.5px);color:var(--dim);line-height:1.85;max-width:40ch;
+    margin-bottom:30px;
+    opacity:0;animation:fadeUp .9s .5s ease forwards;
+  }
+  .hero .sub b{color:var(--fg);font-weight:600}
+
+  /* 下载按钮 */
+  .dl{opacity:0;animation:fadeUp .9s .65s ease forwards}
+  .dl-btn{
+    display:inline-flex;align-items:center;gap:14px;
+    padding:17px 34px;border-radius:16px;
+    background:linear-gradient(135deg,#3d63e8,var(--brand) 55%,#6f95ff);
+    color:#fff;text-decoration:none;font-weight:700;font-size:17px;
+    letter-spacing:-.01em;
+    box-shadow:0 14px 40px -12px rgba(var(--brand-rgb),.65),0 0 0 1px rgba(255,255,255,.09) inset;
+    position:relative;overflow:hidden;
+    transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s ease;
+  }
+  .dl-btn:hover{
+    transform:translateY(-3px) scale(1.02);
+    box-shadow:0 22px 54px -14px rgba(var(--brand-rgb),.8),0 0 0 1px rgba(255,255,255,.14) inset;
+  }
+  .dl-btn:active{transform:translateY(-1px) scale(.99)}
+  .dl-btn::after{ /* hover 扫光 */
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.28) 50%,transparent 62%);
+    transform:translateX(-110%);
+  }
+  .dl-btn:hover::after{animation:sweep .8s ease}
+  @keyframes sweep{to{transform:translateX(110%)}}
+  .dl-btn svg{width:20px;height:20px;flex:none}
+
+  .dl-meta{
+    margin-top:14px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:11px;letter-spacing:.1em;color:var(--dim);
+    display:flex;flex-wrap:wrap;gap:6px 18px;
+  }
+  .dl-meta .ok{color:#3fd68f}
+
+  /* 手机样机 */
+  .phone{
+    justify-self:center;
+    width:min(300px,72vw);
+    border-radius:40px;
+    padding:10px;
+    background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.04));
+    box-shadow:0 40px 90px -30px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.07) inset;
+    opacity:0;animation:floatIn 1s .55s cubic-bezier(.22,1,.36,1) forwards;
+    position:relative;
+  }
+  @keyframes floatIn{
+    from{opacity:0;transform:translateY(28px) scale(.96)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+  .phone .screen{
+    border-radius:32px;overflow:hidden;aspect-ratio:9/18.5;
+    background:#0a0c12;
+  }
+  .phone .screen img{width:100%;height:100%;object-fit:cover;display:block}
+  /* 悬浮光晕 */
+  .phone::before{
+    content:"";position:absolute;inset:-18%;z-index:-1;border-radius:50%;
+    background:radial-gradient(closest-side,rgba(var(--brand-rgb),.22),transparent);
+    filter:blur(30px);
+  }
+
+  /* 功能亮点 */
+  .feats{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.6vw,16px);
+    margin-top:clamp(48px,9vh,90px);
+  }
+  @media (max-width:640px){ .feats{grid-template-columns:1fr} }
+  .feat{
+    padding:22px 20px;border:1px solid var(--line);border-radius:15px;
+    background:rgba(255,255,255,.02);
+    opacity:0;transform:translateY(16px);
+    transition:border-color .35s ease,background .35s ease,opacity .7s ease,transform .7s ease;
+  }
+  .feat.in{opacity:1;transform:none}
+  .feat:hover{border-color:rgba(var(--brand-rgb),.4);background:rgba(var(--brand-rgb),.05)}
+  .feat .ic{
+    width:36px;height:36px;border-radius:10px;margin-bottom:14px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(var(--brand-rgb),.12);color:var(--brand);
+  }
+  .feat .ic svg{width:19px;height:19px}
+  .feat .t{font-size:15.5px;font-weight:650;margin-bottom:6px}
+  .feat .d{font-size:12.5px;line-height:1.7;color:var(--dim)}
+
+  /* 安装指引 */
+  .guide{
+    margin-top:clamp(40px,7vh,64px);
+    border:1px solid var(--line);border-radius:15px;
+    background:rgba(255,255,255,.02);
+    overflow:hidden;
+    opacity:0;animation:fadeUp .8s .8s ease forwards;
+  }
+  .guide summary{
+    list-style:none;cursor:pointer;
+    padding:18px 22px;
+    display:flex;align-items:center;gap:12px;
+    font-weight:650;font-size:15px;
+  }
+  .guide summary::-webkit-details-marker{display:none}
+  .guide summary .chev{margin-left:auto;color:var(--dim);transition:transform .3s;flex:none}
+  .guide[open] summary .chev{transform:rotate(180deg)}
+  .guide summary .tag{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:10px;letter-spacing:.14em;color:var(--brand);
+    border:1px solid rgba(var(--brand-rgb),.35);border-radius:99px;padding:3px 10px;
+    flex:none;
+  }
+  .guide ol{padding:2px 22px 22px 46px;color:var(--dim);font-size:13.5px;line-height:2.1}
+  .guide ol b{color:var(--fg)}
+
+  /* 页脚 */
+  .foot{
+    margin-top:clamp(48px,8vh,80px);padding-top:22px;
+    border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+    font-size:12px;color:rgba(255,255,255,.3);
+    opacity:0;animation:fadeUp .9s 1s ease forwards;
+  }
+  .foot a{color:rgba(255,255,255,.45);text-decoration:none}
+  .foot a:hover{color:var(--brand)}
+  .foot .links{display:flex;gap:20px}
+
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(18px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .nav,.hero,.eyebrow,.sub,.dl,.guide,.foot{opacity:1}
+    .feat{opacity:1;transform:none}
+    .phone{opacity:1}
+    .aurora{animation:none}
+  }
+</style>
 </head>
-
 <body>
-    <!-- 头部 -->
-    <header>
-        <nav class="flex">
-            <img class="logoImg" src="img/icon.png" alt="">
-            <ul class="title">
-                <li><a href="./app-release.apk">下载</a></li>
-<!--                <li><a href="../index.html">下载</a></li>-->
-<!--                <li><a href="../join.html">下载</a></li>-->
-<!--                <li><a href="../about.html">下载</a></li>-->
-                
-            </ul>
-        </nav>
-    </header>
-    <!-- 内容区 -->
-    <section id="jpdown-page">
 
-        <!-- 产品内容区 -->
-        <div class="product-content">
-            <!-- 悦颜相机 -->
-            <div class="serve-translate serve-flash section page1">
-                <div class="flash w flex">
-                    <div class="text">
-                        <h2>实时翻译</h2>
-                        <!-- <li>MY</li>
-                        <span>DIARY</span> -->
-                        <p style="margin-top: 39px;">专业语音实时翻译App</p>
-                        <div class="bgc-url"></div>
-                    </div>
-                    <img src="img/1.png" alt="">
-                </div>
-            </div>
-            <!-- 精致修容 -->
-            <div class="serve-translate serve-voice  section page2">
-                <div class="voice w white">
-                    <h2>个人中心</h2>
-                    <div class="bgc-icon"></div>
-                    <p>
-                        个性设置<br/>
-                        随时使用
-                    </p>
-                    <img src="img/2.png" alt="">
-                </div>
-            </div>
-            <!-- 高级滤镜 -->
-<!--            <div class="serve-translate serve-flash section page3">-->
-<!--                <div class="flash w flex white">-->
-<!--                    <div>-->
-<!--                        <h2>会员中心</h2>-->
-<!--                        <div class="bgc-icon"></div>-->
-<!--                        <p>-->
-<!--                            尊贵会员<br>-->
-<!--                            立享体验-->
-<!--                        </p>-->
-<!--                        <img src="img/3.png" alt="">-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <!-- 在线美颜 -->-->
-<!--            <div class="serve-translate serve-voice section page4">-->
-<!--                <div class="voice w white">-->
-<!--                    <h2>关于我们</h2>-->
-<!--                    <div class="bgc-icon"></div>-->
-<!--                    <p>-->
-<!--                        用户协议<br/>-->
-<!--                        隐私政策-->
-<!---->
-<!--                    </p>-->
-<!--                    <img src="img/4.png" alt="">-->
-<!--                </div>-->
-<!--            </div>-->
+<div class="aurora"></div>
+<div class="grid"></div>
+
+<div class="wrap">
+
+  <nav class="nav">
+    <div class="logo">
+      <img src="./icon.png" alt="Lingo 图标">
+      Lingo
+    </div>
+    <span class="ver">v4.1.4 · arm64-v8a</span>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Real-time Speech Translation</div>
+      <h1>对着说话<br><span class="grad">即时翻译</span></h1>
+      <p class="sub">
+        <b>Lingo</b> 是一款 Android 实时语音翻译 App：你说话，它翻译。
+        出国旅行问路点餐、跨语言会议沟通，一部手机就够了。
+      </p>
+      <div class="dl">
+        <a class="dl-btn" href="http://oss.duwenjie.site/lingo/lingo_4.1.4_release_arm64-v8a.apk" download="lingo-4.1.4.apk">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg>
+          下载 APK
+        </a>
+        <div class="dl-meta">
+          <span>v4.1.4</span>
+          <span>11 MB</span>
+          <span>Android 7.0+</span>
+          <span class="ok">● 阿里云 OSS 加速 · 秒下</span>
         </div>
-    </section>
-</body>
-<script src="js/jquery-1.11.0.min.js"></script>
-<script src="js/jquery.fullPage.min.js"></script>
+      </div>
+    </div>
+
+    <div class="phone">
+      <div class="screen"><img src="./img/1.png" alt="Lingo 应用界面" loading="lazy"></div>
+    </div>
+  </section>
+
+  <section class="feats">
+    <div class="feat">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/></svg></div>
+      <div class="t">实时语音翻译</div>
+      <div class="d">对着手机说话即可翻译，贴近自然对话节奏，不用打字。</div>
+    </div>
+    <div class="feat">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 1 0 0 16h8v-8a8 8 0 0 0-8-8z"/><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M9 15c1.5 1 4.5 1 6 0"/></svg></div>
+      <div class="t">个人中心</div>
+      <div class="d">翻译记录云端留存，换手机也不丢历史对话。</div>
+    </div>
+    <div class="feat">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none"/></svg></div>
+      <div class="t">数据安全</div>
+      <div class="d">通信全程加密，隐私政策透明，不留不必要的权限。</div>
+    </div>
+  </section>
+
+  <details class="guide">
+    <summary>
+      <span class="tag">GUIDE</span>
+      第一次安装 APK？三步搞定
+      <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary>
+    <ol>
+      <li>点击上方 <b>「下载 APK」</b>，等待浏览器下载完成（约 11 MB，几秒钟）</li>
+      <li>打开下载完成的文件，系统提示 <b>「允许安装未知来源应用」</b> 时选择允许——这是 Android 对所有非商店安装的标准提示，Lingo 本身安全可靠</li>
+      <li>安装完成后打开 Lingo，按提示授予 <b>麦克风权限</b>，即可开始翻译</li>
+    </ol>
+  </details>
+
+  <footer class="foot">
+    <span>© <span id="year">2026</span> duwenjie.site · Lingo</span>
+    <div class="links">
+      <a href="./index_agreement.html">用户协议</a>
+      <a href="./index_private.html">隐私政策</a>
+      <a href="/">返回主页</a>
+    </div>
+  </footer>
+
+</div>
+
 <script>
-    $(document).ready(function () {
-        $(function () {
-            $('#jpdown-page').fullpage({
-                'navigation': true,
-                'scrollingSpeed': 800,
-                'continuousVertical': false,
-                'css3': true,
-                //events
-                afterLoad: function (anchorLink, index) {
-                    if (index == 2) {
-                        $('.page2').find('.move-item').delay(100).animate({
-                            bottom: '-17%'
-                        }, 'slow');
-                    }
-                    if (index == 3) {
-                        $('.page3').find('.move-item').delay(100).animate({
-                            bottom: '-17%'
-                        }, 'slow');
-                    }
-                    if (index == 4) {
-                        $('.page4').find('.move-item').delay(100).animate({
-                            bottom: '-17%'
-                        }, 'slow');
-                    }
-                },
-                onLeave: function (index, direction) {
-                    if (index == '2') {
-                        $('.page2').find('.move-item').delay(0).animate({
-                            bottom: '0%'
-                        }, 'fast');
-                    }
-                    if (index == '3') {
-                        $('.page3').find('.move-item').delay(0).animate({
-                            bottom: '0%'
-                        }, 'fast');
-                    }
-                    if (index == '4') {
-                        $('.page4').find('.move-item').delay(0).animate({
-                            bottom: '0%'
-                        }, 'fast');
-                    }
-                }
-            })
-        })
-    })
+(function(){
+  "use strict";
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* 功能卡片滚动进入时浮现 */
+  var feats = document.querySelectorAll(".feat");
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){
+          var el = en.target;
+          setTimeout(function(){ el.classList.add("in"); },
+            80 * [].indexOf.call(feats, el));
+          io.unobserve(el);
+        }
+      });
+    }, {threshold:.2});
+    feats.forEach(function(f){ io.observe(f); });
+  } else {
+    feats.forEach(function(f){ f.classList.add("in"); });
+  }
+})();
 </script>
 
+</body>
 </html>
