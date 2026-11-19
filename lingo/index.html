@@ -222,12 +222,23 @@
     margin-top:clamp(48px,8vh,80px);padding-top:22px;
     border-top:1px solid var(--line);
     display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
-    font-size:12px;color:rgba(255,255,255,.3);
+    font-size:12px;color:rgba(232,236,244,.6);
     opacity:0;animation:fadeUp .9s 1s ease forwards;
   }
-  .foot a{color:rgba(255,255,255,.45);text-decoration:none}
+  .foot a{color:rgba(232,236,244,.72);text-decoration:none}
   .foot a:hover{color:var(--brand)}
-  .foot .links{display:flex;gap:20px}
+  .foot .links{display:flex;gap:20px;flex-wrap:wrap}
+  .foot .beian{
+    color:#cfd8ea;
+    border-bottom:1px solid rgba(207,216,234,.28);
+    padding-bottom:1px;
+    transition:color .3s ease,border-color .3s ease;
+  }
+  .foot .beian:hover{color:#8fb0ff;border-bottom-color:rgba(143,176,255,.7)}
+  @media (max-width:560px){
+    .foot{justify-content:center;text-align:center}
+    .foot .links{justify-content:center}
+  }
 
   @keyframes fadeUp{
     from{opacity:0;transform:translateY(18px)}
@@ -321,6 +332,7 @@
     <div class="links">
       <a href="./index_agreement.html">用户协议</a>
       <a href="./index_private.html">隐私政策</a>
+      <a class="beian" href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">豫ICP备2024071507号-3</a>
       <a href="/">返回主页</a>
     </div>
   </footer>

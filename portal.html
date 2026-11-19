@@ -359,14 +359,28 @@
 
   /* 底部 */
   .foot{
-    display:flex;justify-content:space-between;align-items:center;gap:16px;
-    flex-wrap:wrap;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    gap:12px;text-align:center;
     padding-top:22px;
     border-top:1px solid var(--line);
     font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:rgba(255,255,255,.24);
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:rgba(232,236,244,.6);
     opacity:0;animation:fadeUp .9s 1.5s ease forwards;
+  }
+
+  .foot .beian{
+    color:#cfd8ea;
+    font-size:11.5px;
+    letter-spacing:.06em;
+    text-decoration:none;
+    border-bottom:1px solid rgba(207,216,234,.28);
+    padding-bottom:1px;
+    transition:color .3s ease,border-color .3s ease;
+  }
+  .foot .beian:hover{
+    color:#7fe7f7;
+    border-bottom-color:rgba(127,231,247,.7);
   }
 
   /* ============ 移动端 ============ */
@@ -381,7 +395,8 @@
     .card .d{font-size:11px;line-height:1.6}
     .card .go{right:14px;bottom:14px;width:13px;height:13px}
     .hero{margin-top:36px;margin-bottom:32px}
-    .foot{font-size:9px;letter-spacing:.08em}
+    .foot{font-size:10px;letter-spacing:.06em}
+    .foot .beian{font-size:10.5px}
     .scanline{display:none}
   }
   @media (max-width:380px){
@@ -486,7 +501,9 @@
 
   <footer class="foot">
     <span>© <span id="year">2026</span> duwenjie.site</span>
-    <span>Built with care · Hosted on Aliyun ECS</span>
+    <span>
+      <a class="beian" href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">豫ICP备2024071507号-3</a>
+    </span>
   </footer>
 
 </div>
