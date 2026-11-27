@@ -1,0 +1,2219 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#efeff0">
+<title>零件分拣站</title>
+<style>
+  :root {
+    color-scheme: light;
+    --background: #efeff0;
+    --surface: #fcfcfc;
+    --ink: #29212a;
+    --muted: #5e5860;
+    --line: #d8d3d7;
+    --accent: #793c15;
+    --button-light: #75ceff;
+    --button-blue: #4394fb;
+    --button-violet: #6034e3;
+    --button-edge: #281b4d;
+    --button-face:
+      radial-gradient(ellipse 15px 8px at 15% 14%, #d2f6ffcc 0 32%, #8cdfff4d 55%, transparent 76%),
+      linear-gradient(180deg, var(--button-light), var(--button-blue) 24%, #4949e9 69%, var(--button-violet) 100%);
+    --button-shadow: inset 0 1px #f0faff9f, inset 0 -2px #31218370, 0 2px #3b2260;
+    --warning: #894815;
+    --danger: #a32f20;
+    font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background-color: var(--background);
+    background-image: radial-gradient(ellipse at 43% 10%, #ffffff7d 0%, transparent 66%),
+      linear-gradient(0deg, #cac8cb25 0 2px, #fff 2px 4px, transparent 4px),
+      linear-gradient(90deg, #cac8cb25 0 2px, #fff 2px 4px, transparent 4px);
+    background-size: auto, 74px 74px, 74px 74px;
+    color: var(--ink);
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  button { color: inherit; font: inherit; cursor: pointer; }
+  button:focus-visible { outline: 2px solid #4236a0; outline-offset: 4px; }
+  button:disabled { cursor: default; }
+  h1, h2, p { margin: 0; }
+  .screen { width: min(560px, 100% - 48px); margin: 0 auto; padding: 34px 0 25px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 17px; }
+  .top-actions { display: flex; align-items: center; gap: 6px; }
+  .top-actions .control { min-height: 44px; padding-inline: 10px; }
+  .brand { display: flex; gap: 15px; align-items: center; }
+  .brand-mark {
+    width: 53px;
+    height: 53px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 3px;
+    padding: 11px;
+    border: 1px solid #3d225f;
+    border-radius: 15px;
+    background: linear-gradient(150deg, #68c5ff, #6438e6 75%);
+    box-shadow: inset 0 -3px #41209b, 0 6px 18px #27205630;
+  }
+  .brand-mark i { background: #fef6ff; border-radius: 2px; }
+  .brand-mark i:last-child { background: transparent; border: 2px solid #fef6ff; transform: rotate(-18deg); }
+  h1 { font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -.055em; line-height: 1.12; }
+  .help-button {
+    height: 44px;
+    width: 44px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: linear-gradient(#ffffffcf, #e8e4edc9);
+    color: var(--ink);
+    font: 700 1.16rem ui-monospace, monospace;
+  }
+  .help-button:hover { background: #e9e7ff; border-color: #8c80b7; }
+  .control, .mode-button, .action {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #f8f8ff;
+    padding: 8px 12px;
+    font-size: .875rem;
+    font-weight: 650;
+    white-space: nowrap;
+    min-height: 40px;
+  }
+  .control { color: #443653; }
+  .control:hover:not(:disabled), .mode-button:hover:not(:disabled), .action:hover { background: #e9e7ff; border-color: #8c80b7; }
+  .control:disabled { opacity: .43; }
+  .sound-indicator { display: inline-block; width: 8px; height: 8px; border: 1px solid #8174a6; border-radius: 50%; margin-left: 5px; vertical-align: 1px; }
+  [aria-pressed="true"] .sound-indicator { background: var(--accent); border-color: var(--accent); }
+  .modebar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    margin-bottom: 13px;
+    padding: 4px;
+    border: 1px solid #d8d3d7;
+    border-radius: 12px;
+    background: #fff9;
+  }
+  .mode-button {
+    background: linear-gradient(#ffffffa8, #ede7f8c9);
+    color: #4c4160;
+    border-color: transparent;
+    min-height: 44px;
+    padding: 7px;
+  }
+  .mode-button[aria-pressed="true"],
+  .rack-actions .control,
+  .action.primary {
+    color: white;
+    border-color: var(--button-edge);
+    background: var(--button-face);
+    box-shadow: var(--button-shadow);
+    text-shadow: 0 1px #29164e, 1px 1px #29164e, -1px 1px #29164e;
+  }
+  .mode-button[aria-pressed="true"]:hover,
+  .rack-actions .control:not(:disabled):hover,
+  .action.primary:hover {
+    background: var(--button-face);
+    border-color: var(--button-edge);
+    filter: brightness(1.09);
+  }
+  .mode-button[aria-pressed="true"]:active,
+  .rack-actions .control:not(:disabled):active,
+  .action.primary:active { background-position: 0 2px; transform: translateY(1px); }
+  .machine {
+    background: linear-gradient(145deg, var(--surface), #f6f5f6 76%);
+    border: 1px solid var(--line);
+    border-radius: 17px;
+    box-shadow: 0 13px 35px #522b211c, inset 0 1px #ffffffb8;
+  }
+  .machine {
+    --remaining-width: 40px;
+    --lane-parts: repeat(2, minmax(0, 1fr)) minmax(0, 1.18fr);
+    padding: 16px 19px 17px;
+  }
+  .mission {
+    padding: 12px 14px 10px;
+    margin-bottom: 13px;
+    border: 1px solid #d7ced0;
+    border-radius: 10px;
+    background: #f5f3f3;
+  }
+  .mission[data-mode="rush"] { border-color: #deae69; background: #fff0cd; }
+  .mission[data-mode="orders"] { border-color: #e3cda6; background: #fff4df; }
+  .mission[data-mode="dual"] { border-color: #c9b9eb; background: #eee7fc; }
+  .mission[data-mode="loop"] { border-color: #abc7e4; background: #e8f3ff; }
+  .mission-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .mission-title, .mission .total { font-weight: 800; }
+  .mission-title {
+    color: white;
+    -webkit-text-stroke: 3px #292027;
+    paint-order: stroke fill;
+    text-shadow: 0 2px #292027;
+  }
+  .mission .total { margin: 0; font-size: .875rem; gap: 4px; }
+  .mission .total strong { font-size: 1.13rem; letter-spacing: -.035em; }
+  .mission .mission-sub { margin-top: 4px; color: #62525a; font-size: .8125rem; line-height: 1.3; }
+  .mission .mission-sub[data-warning="true"] { color: var(--warning); }
+  .mission progress { margin: 8px 0 0; height: 5px; }
+  .recipe-strip { display: flex; gap: 4px; margin-top: 6px; overflow-x: auto; scrollbar-width: thin; }
+  .recipe-strip .recipe-card { flex: 1 0 96px; }
+  .recipe-card[data-partner="true"] { border-color: #b16725; box-shadow: inset 0 0 0 1px #e4ab65; }
+  .recipe-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1px;
+    min-width: 0;
+    padding: 3px 1px;
+    border: 1px solid #d7c3a3;
+    border-radius: 7px;
+    background: #fff7e7;
+    color: #64451f;
+    font: 700 .75rem ui-monospace, monospace;
+  }
+  .recipe-card[data-done="true"] { background: #e7f1dc; border-color: #9cae83; color: #405b39; }
+  .recipe-card .part { width: clamp(17px, 6vw, 27px); filter: none; }
+  .recipe-count { margin-left: 3px; }
+  .rack-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  h2 { font-size: 1rem; font-weight: 750; }
+  .section-head {
+    display: grid;
+    grid-template-columns: var(--remaining-width) var(--lane-parts);
+    margin: 0 1px 7px;
+    text-align: center;
+    color: var(--muted);
+    font-size: .8125rem;
+  }
+  .preview-label { grid-column: span 2; }
+  .feed-label { color: var(--accent); font-weight: 700; }
+  .lanes { display: grid; gap: 8px; }
+  .lanes[data-dense="true"] { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; gap: 4px; }
+  .lanes[data-dense="true"] .lane { min-height: 52px; }
+  .lanes[data-dense="true"] .pickup { min-height: 44px; margin: 2px 3px; }
+  .lanes[data-dense="true"] .part { width: min(80%, 39px); }
+  .lane-count.shift-button { padding: 0; border: 0; border-right: 1px solid #c6bdbf; line-height: 1; }
+  .lane-count.shift-button:not(:disabled) { color: #472b87; background: #e5d8fc; }
+  .lane-count.shift-button > span { display: block; }
+  .lane-count.shift-button span:first-child { font-size: 1rem; }
+  .lane-count.shift-button:focus-visible { outline-offset: -3px; }
+  .lane {
+    display: grid;
+    grid-template-columns: var(--remaining-width) minmax(0, 1fr);
+    border: 1px solid #c2b9bb;
+    background: #d6d3d4;
+    border-radius: 11px;
+    min-height: 85px;
+    overflow: hidden;
+  }
+  .lane-count {
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font: 700 .875rem ui-monospace, monospace;
+    background: linear-gradient(140deg, #fcfafa, #e4dedf);
+    border-right: 1px solid #c6bdbf;
+    font-variant-numeric: tabular-nums;
+  }
+  .lane-track {
+    position: relative;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: var(--lane-parts);
+    background:
+      repeating-linear-gradient(90deg, #80727440 0 1px, #fff8 1px 2px, transparent 2px 24px),
+      linear-gradient(180deg, #c6bcbc 0%, #e6dfdd 22%, #f0ebe8 50%, #d6cccc 100%);
+    background-position: 0 0, 0 0;
+  }
+  .lane-track::before, .lane-track::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(#f6efeb, #b5a4a2 50%, #8e7d81);
+    pointer-events: none;
+  }
+  .lane-track::before { top: 0; }
+  .lane-track::after { bottom: 0; transform: scaleY(-1); }
+  .lane[data-loop="true"] .lane-count { background: #d2e8fa; color: #163c65; }
+  .lane[data-loop="true"] .lane-track {
+    background:
+      repeating-linear-gradient(90deg, #436e9a60 0 1px, #fff7 1px 2px, transparent 2px 24px),
+      linear-gradient(#87baf1, #dcecff 46%, #8bb8e3);
+  }
+  .lane[data-loop="true"] .lane-track::before, .lane[data-loop="true"] .lane-track::after {
+    background: linear-gradient(#d9f0ff, #6697c5 50%, #46709b);
+  }
+  .lane[data-arrival="true"] { border-color: #b98237; box-shadow: inset 0 0 0 1px #dfaa64; }
+  .lane[data-arrival="true"] .lane-count { background: #ffe9b8; color: #724819; }
+  .part-cell {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-width: 0;
+  }
+  .part-cell[data-empty="true"]::after { content: ""; width: 15px; border-top: 1px solid #a89a9b; }
+  .part-cell[data-guide="true"] { background: #fff1d4; box-shadow: inset 0 0 0 1px #d78227; }
+  .pickup {
+    position: relative;
+    display: grid;
+    place-items: center;
+    border: 1px solid #ac9cd6;
+    border-radius: 8px;
+    background: radial-gradient(ellipse at 50% 47%, #ffffff, #ece5ff 82%);
+    margin: 5px;
+    min-width: 0;
+    box-shadow: inset 0 -3px #d0bbea;
+    transition: background .14s, border-color .14s, transform .14s;
+    touch-action: manipulation;
+  }
+  .pickup::before, .pickup::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border: solid #7763aa;
+    pointer-events: none;
+  }
+  .pickup::before { top: 5px; left: 5px; border-width: 1px 0 0 1px; }
+  .pickup::after { bottom: 5px; right: 5px; border-width: 0 1px 1px 0; }
+  .pickup:hover:not([aria-disabled="true"]), .pickup:focus-visible { background: #f0e7ff; border-color: #8b65c3; }
+  .pickup:active:not([aria-disabled="true"]) { transform: translateY(2px); }
+  .pickup[data-match="true"] { border-color: #ad651b; background: radial-gradient(ellipse at center, #fff4ba, #ffd88e 85%); box-shadow: inset 0 0 0 1px #ce8c42a0, 0 0 14px #e3903b50; }
+  .pickup[data-guide="wait"] { opacity: .5; cursor: default; }
+  .pickup[data-guide="next"] {
+    border-color: #aa5914;
+    background: radial-gradient(ellipse at center, #fff9df, #fbe1ab 85%);
+    box-shadow: inset 0 0 0 1px #ffc667, 0 0 14px #edaa4d55;
+    animation: guide-pulse 1.4s ease-in-out infinite alternate;
+  }
+  @keyframes guide-pulse {
+    to { box-shadow: inset 0 0 0 2px #ffc667, 0 0 18px #edaa4d75; }
+  }
+  .pickup[data-empty="true"] { border-color: #c3c0c6; background: #e7e5e8; box-shadow: none; cursor: default; }
+  .pickup[data-empty="true"]::before, .pickup[data-empty="true"]::after { display: none; }
+  .empty-mark { color: #625b66; font-size: .8rem; }
+  .part { display: block; width: min(90%, 73px); aspect-ratio: 1; object-fit: contain; pointer-events: none; user-select: none; filter: drop-shadow(0 4px 4px #2a172f45); }
+  .part-cell .part { width: min(86%, 63px); }
+  .rack-section {
+    margin-top: 15px;
+    padding: 9px 10px 10px;
+    border: 1px solid #50200f;
+    border-top: 4px solid #d4a977;
+    border-radius: 12px;
+    background:
+      linear-gradient(119deg, #f5a66128, transparent 45%),
+      repeating-linear-gradient(0deg, #36130932 0 2px, #d1854c16 2px 4px, transparent 4px 27px),
+      repeating-linear-gradient(95deg, #73341642 0 12px, transparent 12px 49px),
+      linear-gradient(155deg, #9a522a 0%, #773616 46%, #5f2309 100%);
+    box-shadow: inset 0 0 0 2px #4a1d0f50, 0 3px 7px #5b302c2b;
+  }
+  .rack-heading h2 { color: #fff3dd; text-shadow: 0 1px #3e180c, 1px 2px #3e180c; }
+  .rack-section button:focus-visible { outline-color: #fff1c0; }
+  .rack-actions { display: flex; gap: 5px; }
+  .rack-bay[data-dual="true"] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin-top: 6px; }
+  .rack-select {
+    width: 100%;
+    min-height: 44px;
+    padding: 5px 3px;
+    border: 1px solid #dab595;
+    border-radius: 7px;
+    background: #5a2b24;
+    color: #fff3dd;
+    font-size: .8125rem;
+    font-weight: 800;
+  }
+  .rack-select[aria-pressed="true"] { background: #ffeca8; color: #612c16; border-color: #d48034; }
+  .rack-bay[data-dual="true"] .rack { margin-top: 4px; }
+  .rack-heading { display: flex; gap: 9px; align-items: center; }
+  .capacity {
+    border: 1px solid #e5be85;
+    border-radius: 5px;
+    color: var(--accent);
+    background: #ffedcf;
+    padding: 3px 7px;
+    font: 650 .82rem ui-monospace, monospace;
+    white-space: nowrap;
+  }
+  .capacity[data-state="warning"] { color: var(--warning); border-color: #d99851; background: #ffe0a5; }
+  .capacity[data-state="full"] { color: var(--danger); border-color: #f6b5a2; background: #ffe1d5; }
+  .rack-head .control { min-height: 35px; padding: 5px 9px; font-size: .81rem; }
+  .rack {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+    margin-top: 8px;
+    padding: 7px;
+    background: repeating-linear-gradient(136deg, #c18c5e 0 6px, #b78155 6px 12px);
+    border: 1px solid #4e2111;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px #f8dfbb;
+  }
+  .slot {
+    height: 64px;
+    display: grid;
+    place-items: center;
+    position: relative;
+    min-width: 0;
+    border: 1px solid #a77551;
+    border-radius: 7px;
+    background: linear-gradient(#fff3de, #fffdf4);
+    box-shadow: inset 0 4px 8px #431f172b;
+  }
+  .slot[data-active="true"] { border-color: #d28a40; background: #ffedc7; }
+  .slot[data-active="true"]::after { content: ""; position: absolute; bottom: 4px; height: 2px; width: 20px; background: var(--accent); border-radius: 4px; }
+  .slot[data-occupied="false"]::before { content: "+"; color: #77543f; font: 400 1.2rem ui-monospace, monospace; }
+  .slot .part { width: min(88%, 61px); }
+  .slot.slot-lock {
+    padding: 3px;
+    border: 1px dashed #ecbc8d;
+    background: #432239;
+    color: #fff1d8;
+    font-size: .8125rem;
+    font-weight: 800;
+  }
+  .slot-lock:not(:disabled) {
+    background: linear-gradient(#745eee, #5039aa);
+    border-style: solid;
+    border-color: #312168;
+    box-shadow: inset 0 1px #ffffff65;
+  }
+  .slot-lock:disabled { opacity: .72; }
+  .status { min-height: 1.5em; margin: 8px 1px 0; color: #fff3df; font-size: .875rem; line-height: 1.5; }
+  .status[data-tone="match"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    min-height: 0;
+    margin: -1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+  .status[data-tone="danger"] { color: #ffc9bc; }
+  .status[data-tone="warning"] { color: #ffdd9e; }
+  .total { display: flex; align-items: baseline; color: var(--muted); font: 650 1rem ui-monospace, monospace; white-space: nowrap; }
+  .total strong { color: var(--accent); font-family: inherit; }
+  progress { display: block; width: 100%; height: 5px; border: 0; border-radius: 10px; background: #e3d9db; overflow: hidden; }
+  progress::-webkit-progress-bar { background: #e3d9db; border-radius: 10px; }
+  progress::-webkit-progress-value { background: linear-gradient(180deg, #ffdc7d, #dd8935); border-radius: 10px; }
+  progress::-moz-progress-bar { background: linear-gradient(180deg, #ffdc7d, #dd8935); border-radius: 10px; }
+  .guide-layer { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
+  .guide-spotlight {
+    position: absolute;
+    border: 2px solid #9a5014;
+    border-radius: 12px;
+    box-shadow: 0 0 0 180vmax #261b2c4a, 0 0 18px #ffcf75d0;
+  }
+  .guide-card {
+    position: absolute;
+    padding: 9px 13px 13px;
+    border-radius: 13px;
+    background: #fff0cd;
+    color: #432515;
+    box-shadow: 0 9px 24px #35233145;
+    pointer-events: auto;
+  }
+  .guide-card::after {
+    content: "";
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    left: var(--guide-arrow);
+    bottom: -6px;
+    transform: translateX(-50%) rotate(45deg);
+    background: inherit;
+  }
+  .guide-card[data-side="below"]::after { top: -6px; bottom: auto; }
+  .guide-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .guide-step { color: #784a28; font-size: .875rem; font-weight: 750; }
+  .guide-card p { font-size: 1.0625rem; font-weight: 750; line-height: 1.45; }
+  .guide-skip {
+    border: 0;
+    border-radius: 6px;
+    min-height: 44px;
+    padding: 3px 9px;
+    background: transparent;
+    color: #664025;
+    font-size: .875rem;
+    font-weight: 700;
+  }
+  .guide-skip:hover { background: #f6d9a7; }
+  .guide-skip:focus-visible { outline-color: #663458; }
+  .flight { position: fixed; z-index: 4; pointer-events: none; width: auto; transform-origin: center; }
+  dialog {
+    border: 1px solid #cdbec9;
+    border-radius: 18px;
+    padding: 24px;
+    width: min(440px, 100% - 28px);
+    max-height: calc(100% - 32px);
+    overscroll-behavior: contain;
+    margin: auto;
+    color: var(--ink);
+    background: linear-gradient(150deg, #fffefa, #f4eff8);
+    box-shadow: 0 20px 70px #31213642;
+  }
+  dialog::backdrop { background: #261a2b5c; backdrop-filter: blur(3px); }
+  .result-sign { color: var(--accent); margin-bottom: 11px; font-weight: 750; font-size: .875rem; }
+  dialog[data-result="lost"] .result-sign { color: var(--warning); }
+  dialog h2 { font-size: 1.8rem; letter-spacing: -.04em; margin-bottom: 9px; }
+  dialog p { color: #574756; line-height: 1.6; }
+  .result-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+  .reward-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .reward-actions .action { min-height: 44px; padding-inline: 6px; }
+  .dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+  .dialog-head h2 { margin: 0; font-size: 1.35rem; }
+  .dialog-close { width: 44px; height: 44px; padding: 0; font-size: 1.3rem; }
+  .help-list { padding-left: 1.3rem; color: #443653; line-height: 1.6; margin: 9px 0 10px; }
+  .help-list li + li { margin-top: 6px; }
+  .rank-list { list-style: none; margin: 10px 0 6px; padding: 0; }
+  .rank-row {
+    display: grid;
+    grid-template-columns: 2.1em minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 5px 7px;
+    border-bottom: 1px solid var(--line);
+  }
+  .rank-row[data-current="true"] { background: #ece4ff; border-radius: 6px; }
+  .rank-index { text-align: center; color: var(--muted); font: 700 .875rem ui-monospace, monospace; }
+  .rank-person { min-width: 0; overflow-wrap: anywhere; }
+  .rank-person strong { font-size: .95rem; }
+  .rank-region { color: #665a6a; margin-left: .4em; font-size: .76rem; }
+  .rank-score { font-size: .875rem; color: var(--accent); white-space: nowrap; }
+  .rank-empty { padding: 9px 0; font-size: .875rem; }
+  #rank-scope { font-size: .85rem; }
+  .profile-settings { margin-top: 13px; border-top: 1px solid var(--line); }
+  .profile-settings summary { cursor: pointer; padding: 10px 0; color: #42324b; font-weight: 700; }
+  .profile-settings label, .stage-form label { display: flex; flex-direction: column; gap: 5px; color: #55445b; font-size: .875rem; }
+  .profile-settings input, .profile-settings select, .stage-form :is(input, select) {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #bfb1c7;
+    border-radius: 7px;
+    font: inherit;
+    font-size: 1rem;
+    min-height: 44px;
+    padding: 7px 8px;
+    background: #ffffff;
+    color: var(--ink);
+  }
+  .profile-settings :is(input, select):focus-visible, .stage-form :is(input, select):focus-visible { outline: 2px solid #4236a0; outline-offset: 2px; }
+  .stage-form label + label { margin-top: 10px; }
+  .profile-fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: 9px; margin-top: 9px; }
+  .profile-actions { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-top: 11px; }
+  .profile-feedback { font-size: .875rem; margin-top: 6px; }
+  .profile-feedback:empty { display: none; }
+  [hidden] { display: none !important; }
+
+  @media (max-width: 630px) {
+    .machine[data-dense="true"] { display:flex; flex-direction:column; max-height: calc(100dvh - 134px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
+    .machine[data-dense="true"] > :not(.lanes) { flex: 0 0 auto; }
+    .machine[data-dense="true"] .lanes { flex: 1 1 auto; }
+
+    .screen {
+      width: min(500px, 100% - 24px);
+      padding: max(13px, env(safe-area-inset-top)) 0 max(16px, env(safe-area-inset-bottom));
+    }
+    .topbar { gap: 8px; margin-bottom: 9px; }
+    .brand { gap: 9px; }
+    .brand-mark { width: 36px; height: 36px; border-radius: 10px; padding: 7px; }
+    h1 { font-size: clamp(1.35rem, 6vw, 1.85rem); white-space: nowrap; }
+    .modebar { margin-bottom: 8px; }
+    .machine { --remaining-width: 44px; width: 100%; padding: 9px; }
+    .mission { padding: 8px 9px; margin-bottom: 8px; }
+    .lane { min-height: 66px; }
+    .lanes { gap: 5px; }
+    .pickup { margin: 3px; min-height: 56px; }
+    .pickup .part { width: min(90%, 57px); }
+    .part-cell .part { width: min(86%, 58px); }
+    .rack-section { margin-top: 9px; padding: 7px 7px 7px; }
+    .rack-head .control { min-height: 44px; }
+    .rack { padding: 5px; gap: 5px; }
+    .slot { height: 54px; }
+    .slot .part { width: min(88%, 52px); }
+    .status { margin-top: 7px; }
+    dialog { padding: 16px; }
+  }
+  @media (max-width: 350px) {
+    .screen { width: calc(100% - 18px); }
+    .brand { gap: 6px; }
+    .brand-mark { width: 30px; height: 30px; padding: 6px; }
+    .rack-actions .control { padding-inline: 7px; }
+  }
+  @media (max-width: 630px) and (max-height: 650px) {
+    .screen { padding-top: max(8px, env(safe-area-inset-top)); }
+    .topbar, .modebar, .mission { margin-bottom: 6px; }
+    .mission { padding: 6px 8px; }
+    .mission[data-mode="dual"] { padding-block: 4px; }
+    .mission progress { margin-top: 6px; }
+    .lane { min-height: 54px; }
+    .lanes[data-count="4"] { gap: 3px; }
+    .lanes[data-count="4"] .lane { min-height: 51px; }
+    .pickup { min-height: 46px; margin: 2px 3px; }
+    .pickup .part { width: min(90%, 44px); }
+    .part-cell .part { width: min(86%, 44px); }
+    .rack-section { margin-top: 6px; padding-top: 5px; }
+    .rack { margin-top: 5px; }
+    .rack-bay[data-dual="true"] { margin-top: 3px; }
+    .slot { height: 45px; }
+    .slot .part { width: min(88%, 44px); }
+  }
+  @media (min-width: 631px) {
+    .machine[data-dense="true"] .lanes { max-height: min(55vh, 420px); }
+  }
+  @media (min-width: 631px) and (max-height: 820px) {
+    .screen { padding-top: 27px; }
+    .topbar { margin-bottom: 19px; }
+    .lane { min-height: 76px; }
+    .pickup .part { width: min(90%, 64px); }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<main class="screen">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <h1>零件分拣站</h1>
+    </div>
+    <div class="top-actions">
+      <button class="control" id="open-stage-picker" type="button" aria-haspopup="dialog">选关</button>
+      <button class="help-button" id="open-help" type="button" aria-label="玩法说明" aria-haspopup="dialog">?</button>
+    </div>
+  </header>
+
+  <nav class="modebar" aria-label="游戏模式">
+    <button class="mode-button" id="open-main" type="button">闯关</button>
+    <button class="mode-button" id="open-rank" type="button" aria-haspopup="dialog">排行</button>
+  </nav>
+
+  <section class="machine" aria-label="分拣台">
+    <section class="mission" id="mission" aria-labelledby="mission-title">
+      <div class="mission-head">
+        <h2 id="mission-title" class="mission-title"></h2>
+        <p class="total" aria-label="装箱进度"><strong id="packed">0</strong><span id="target"></span></p>
+      </div>
+      <p id="mission-sub" class="mission-sub" hidden></p>
+      <div id="recipe-strip" class="recipe-strip" aria-label="合装订单" role="group" hidden></div>
+      <progress id="progress" value="0" max="1" aria-label="已装箱零件数"></progress>
+    </section>
+    <div class="section-head" aria-hidden="true">
+      <span>余量</span><span class="preview-label">预览</span><span class="feed-label">取件</span>
+    </div>
+    <div id="lanes" class="lanes" role="group" aria-label="传送带"></div>
+    <section class="rack-section" aria-labelledby="rack-title">
+      <div class="rack-head">
+        <div class="rack-heading"><h2 id="rack-title">暂存架</h2><span id="capacity" class="capacity"></span></div>
+        <div class="rack-actions">
+          <button id="undo" class="control" type="button">撤回</button>
+          <button id="shuffle" class="control" type="button" aria-label="看模拟视频打乱" hidden>打乱 ▶</button>
+          <button id="restart" class="control" type="button" aria-label="重新开始">重开</button>
+        </div>
+      </div>
+      <div id="rack-bay" class="rack-bay">
+        <div>
+          <button class="rack-select" id="choose-left-rack" type="button" hidden>左架</button>
+          <div id="rack" class="rack" role="group"></div>
+        </div>
+        <div id="right-rack-panel" hidden>
+          <button class="rack-select" id="choose-right-rack" type="button">右架</button>
+          <div id="right-rack" class="rack" role="group"></div>
+        </div>
+      </div>
+      <p id="status" class="status" role="status" hidden></p>
+    </section>
+  </section>
+</main>
+
+<div class="guide-layer" id="guide-layer" hidden>
+  <div class="guide-spotlight" id="guide-spotlight" aria-hidden="true"></div>
+  <section class="guide-card" id="guide-card" aria-label="新手带教">
+    <div class="guide-top">
+      <span class="guide-step" id="guide-step"></span>
+      <button class="guide-skip" id="guide-skip" type="button">跳过带教</button>
+    </div>
+    <p id="guide-copy" role="status"></p>
+  </section>
+</div>
+
+<dialog id="stage-picker" aria-labelledby="stage-picker-title">
+  <div class="dialog-head">
+    <h2 id="stage-picker-title">测试选关</h2>
+    <form method="dialog"><button class="control dialog-close" aria-label="关闭选关">×</button></form>
+  </div>
+  <form class="stage-form" id="stage-form">
+    <label>关卡编号<input id="stage-number" type="number" inputmode="numeric" min="1" max="999999" step="1" required></label>
+    <label>玩法<select id="stage-mode">
+      <option value="">主线随机</option>
+      <option value="standard">基础分拣</option>
+      <option value="orders">合装订单</option>
+      <option value="dual">双暂存架</option>
+      <option value="loop">循环带</option>
+      <option value="temporary">临时来料</option>
+      <option value="shift">换挡带</option>
+      <option value="rush">限步急单</option>
+    </select></label>
+    <div class="result-actions">
+      <button class="action primary" type="submit">开始测试</button>
+      <button class="action" id="stage-return" type="button" hidden>返回闯关</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="help" aria-labelledby="help-title">
+  <div class="dialog-head">
+    <h2 id="help-title">怎么玩</h2>
+    <form method="dialog"><button class="control dialog-close" aria-label="关闭说明">×</button></form>
+  </div>
+  <ol class="help-list">
+    <li>点传送带右侧取件口。左边的两件可以先看。</li>
+    <li>新零件只和暂存架最右端配对。基础分拣配相同件，合装订单配顶部配方。</li>
+    <li>清完传送带即可通关。暂存架填满或急单超出取件次数，都会结束本轮。</li>
+    <li>本局首次撤回免费，之后用模拟视频追加，总共最多 5 次。可以打乱 1 次，单架关还可以依次解锁 2 个额外格子。</li>
+  </ol>
+  <div class="result-actions">
+    <button class="action primary" id="replay-tutorial" type="button">重看带教</button>
+    <button class="control" id="sound" type="button" aria-pressed="false">音效<span class="sound-indicator" aria-hidden="true"></span></button>
+  </div>
+</dialog>
+
+<dialog id="leaderboard" aria-labelledby="rank-title">
+  <div class="dialog-head">
+    <h2 id="rank-title">玩家排行</h2>
+    <form method="dialog"><button class="control dialog-close" aria-label="关闭排行">×</button></form>
+  </div>
+  <p id="rank-scope">本机成绩</p>
+  <ol class="rank-list" id="rank-list" aria-label="排名"></ol>
+  <p class="rank-empty" id="rank-empty"></p>
+  <details class="profile-settings" id="profile-settings">
+    <summary>玩家资料</summary>
+    <label>当前玩家<select id="profile-picker"></select></label>
+    <form id="profile-form">
+      <div class="profile-fields">
+        <label>临时用户名<input id="profile-name" type="text" required maxlength="16" autocomplete="off"></label>
+      </div>
+      <div class="profile-actions">
+        <button class="action primary" type="submit">保存资料</button>
+        <button class="control" id="new-profile" type="button">新增玩家</button>
+      </div>
+      <p class="profile-feedback" id="profile-feedback" role="status"></p>
+    </form>
+  </details>
+</dialog>
+
+<dialog id="result" aria-labelledby="result-title" aria-describedby="result-copy">
+  <p class="result-sign" id="result-sign"></p>
+  <h2 id="result-title"></h2>
+  <p id="result-copy"></p>
+  <p id="result-note" role="status" hidden></p>
+  <div class="result-actions">
+    <button class="action primary" id="result-next" type="button" hidden>下一关</button>
+    <button class="action primary" id="result-undo" type="button" hidden>撤回刚才一步</button>
+    <button class="action" id="result-shuffle" type="button" hidden>打乱续玩 ▶</button>
+    <button class="action" id="result-retry" type="button">再玩一次</button>
+    <button class="action" id="result-back" type="button">返回</button>
+  </div>
+</dialog>
+
+<dialog id="reward" aria-labelledby="reward-title" aria-describedby="reward-copy">
+  <p class="result-sign">模拟视频 · Demo</p>
+  <h2 id="reward-title"></h2>
+  <p id="reward-copy"></p>
+  <div class="result-actions reward-actions">
+    <button class="action" id="reward-skip" type="button">取消</button>
+    <button class="action primary" id="reward-claim" type="button">模拟看完</button>
+  </div>
+</dialog>
+
+<script>
+  "use strict";
+
+  const parts = [
+    { name: "珊瑚齿轮", shape: "gear",    light: "#ffe0c7", face: "#ee7954", dark: "#a7492e", line: "#5c302d" },
+    { name: "青绿电芯", shape: "battery", light: "#ecffa2", face: "#9ed947", dark: "#4b822f", line: "#354c24" },
+    { name: "蓝钢弹簧", shape: "spring",  light: "#beeaff", face: "#6ec4fb", dark: "#3a64a6", line: "#304263" },
+    { name: "黄铜螺母", shape: "nut",     light: "#fff1a8", face: "#f7b440", dark: "#a86522", line: "#65411e" },
+    { name: "紫色垫片", shape: "washer",  light: "#f5dcff", face: "#bc8af1", dark: "#7548a4", line: "#4b3369" },
+    { name: "银色轴承", shape: "bearing", light: "#fbfcff", face: "#b0bfd4", dark: "#5c6d8b", line: "#3a465e" },
+    { name: "玫红卡扣", shape: "clip", mark: "∩", light: "#ffd0e8", face: "#ee689b", dark: "#a13b65", line: "#632b4d" },
+    { name: "青铜销", shape: "pin", mark: "•", light: "#ffdeaa", face: "#d88652", dark: "#9d4e32", line: "#5d352b" },
+    { name: "湖蓝接头", shape: "plug", mark: "‖", light: "#c0f8ef", face: "#5acabf", dark: "#287b78", line: "#274f53" },
+    { name: "朱红旋钮", shape: "dial", mark: "↑", light: "#ffe0c2", face: "#eb6654", dark: "#952f2f", line: "#613031" },
+    { name: "柠檬保险丝", shape: "pin", mark: "ϟ", light: "#fff8b6", face: "#e9bf43", dark: "#a17827", line: "#594525" },
+    { name: "墨蓝芯片", shape: "chip", mark: "□", light: "#a6bfff", face: "#6479c5", dark: "#344579", line: "#322d59" },
+    { name: "薄荷阀门", shape: "wing", mark: "×", light: "#d1f8d2", face: "#76c98b", dark: "#43854e", line: "#36583b" },
+    { name: "莓紫拨片", shape: "wing", mark: "↔", light: "#fbd8ff", face: "#c46ed6", dark: "#813b96", line: "#5c326e" },
+    { name: "橘色密封塞", shape: "plug", mark: "⊙", light: "#ffe7b8", face: "#ff9f52", dark: "#b45029", line: "#6e3a29" },
+    { name: "钴蓝卡环", shape: "clip", mark: "¢", light: "#c8ddff", face: "#628ff1", dark: "#3a51a5", line: "#363c75" },
+    { name: "浅紫转接片", shape: "plate", mark: "◇", light: "#f6e1ff", face: "#bca3e8", dark: "#795b9e", line: "#5c4774" },
+    { name: "海绿分线片", shape: "plate", mark: "Y", light: "#bff4dc", face: "#58b598", dark: "#26725e", line: "#2a594f" },
+    { name: "暖白编码器", shape: "chip", mark: "#", light: "#fffbee", face: "#d5c8ab", dark: "#8a7b60", line: "#5d5546" },
+    { name: "琥珀调节轮", shape: "dial", mark: "⌁", light: "#fff4c8", face: "#f3bf5f", dark: "#ad7130", line: "#664623" }
+  ];
+
+  const baseCapacity = 3;
+  const maxExtraSlots = 2;
+  const maxUndoUses = 5;
+
+  const tutorialLayout = { title: "上岗带教", mode: "tutorial", stage: 0, capacity: 3, lanes: [[0, 1], [2, 2], [0, 1]] };
+  const modeNames = new Map([
+    ["standard", "基础分拣"], ["orders", "合装订单"], ["dual", "双暂存架"],
+    ["loop", "循环带"], ["temporary", "临时来料"], ["shift", "换挡带"], ["rush", "限步急单"]
+  ]);
+  const tutorial = [
+    { lane: 0, copy: "点这里的齿轮，把它放进暂存架。" },
+    { lane: 2, copy: "再点这个齿轮，两个相同的零件就能配对装箱。" },
+    { lane: 0, copy: "先取电芯，给它留一个暂存位。" },
+    { lane: 1, copy: "看左边的预览：两枚弹簧连在一起。先取右边这枚。", preview: true },
+    { lane: 1, copy: "再点这枚弹簧。配完这一对，架里的电芯就露出来了。" },
+    { lane: 2, copy: "点最后一枚电芯，清空暂存架。" }
+  ];
+  const profileStorageKey = "sorting-station.profiles.v1";
+  const regionStorageKey = "sorting-station.network-region.v1";
+  const regionCacheAge = 6 * 60 * 60 * 1000;
+  const chinaRegions = {
+    anhui: "安徽", beijing: "北京", chongqing: "重庆", fujian: "福建",
+    gansu: "甘肃", guangdong: "广东", guangxi: "广西", guizhou: "贵州",
+    hainan: "海南", hebei: "河北", heilongjiang: "黑龙江", henan: "河南",
+    hubei: "湖北", hunan: "湖南", innermongolia: "内蒙古", neimongol: "内蒙古",
+    jiangsu: "江苏", jiangxi: "江西", jilin: "吉林", liaoning: "辽宁",
+    ningxia: "宁夏", qinghai: "青海", shaanxi: "陕西", shandong: "山东",
+    shanghai: "上海", shanxi: "山西", sichuan: "四川", tianjin: "天津",
+    tibet: "西藏", xizang: "西藏", xinjiang: "新疆", yunnan: "云南",
+    zhejiang: "浙江", hongkong: "香港", macao: "澳门", macau: "澳门", taiwan: "台湾"
+  };
+  const countryNames = typeof Intl.DisplayNames === "function"
+    ? new Intl.DisplayNames(["zh-Hans"], { type: "region", fallback: "none" })
+    : null;
+
+  function regionFromNetwork(data) {
+    const countryCode = String(data?.country_code ?? "").toUpperCase().trim();
+    const territories = { HK: "香港", MO: "澳门", TW: "台湾" };
+    if (Object.hasOwn(territories, countryCode)) return territories[countryCode];
+    if (!/^[A-Z]{2}$/.test(countryCode)) return "";
+    if (countryCode === "CN") {
+      const region = typeof data.region === "string" ? data.region.trim() : "";
+      const key = region.toLowerCase().replace(/[^a-z]/g, "");
+      const province = Object.keys(chinaRegions).find(name => key.startsWith(name));
+      if (province) return chinaRegions[province];
+      if (/^[\p{Script=Han}]{2,12}$/u.test(region)) {
+        return region.replace(/(?:维吾尔|回族|壮族)?自治区$|特别行政区$|[省市]$/u, "");
+      }
+      return "中国";
+    }
+    return countryNames?.of(countryCode) ?? (typeof data.country === "string" ? data.country.trim().slice(0, 30) : "");
+  }
+
+  function seededRandom(seed) {
+    let state = seed >>> 0;
+    return () => {
+      state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+      return state / 4294967296;
+    };
+  }
+
+  function stageRandom(stage, salt) {
+    let seed = (stage ^ Math.floor(stage / 4294967296) ^ salt) >>> 0;
+    seed = Math.imul(seed ^ (seed >>> 16), 0x7feb352d);
+    seed = Math.imul(seed ^ (seed >>> 15), 0x846ca68b);
+    return seededRandom(seed ^ (seed >>> 16));
+  }
+
+  function stageScale(stage) {
+    const band = Math.floor((stage - 1) / 3);
+    if (stage < 52) {
+      return {
+        laneCount: Math.min(8, 3 + Math.floor((stage - 1) / 8)),
+        typeCount: Math.min(15, 4 + band),
+        pairCount: Math.min(100, 8 + 6 * band)
+      };
+    }
+    const random = stageRandom(stage, 0x7de99241);
+    return {
+      laneCount: 8 + Math.floor(random() * 3),
+      typeCount: 10 + Math.floor(random() * 11),
+      pairCount: 80 + Math.floor(random() * 41)
+    };
+  }
+
+  function combineTypes(inputs, first, second) {
+    return (inputs[0] === first && inputs[1] === second) ||
+      (inputs[0] === second && inputs[1] === first);
+  }
+
+  function randomize(items, random) {
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    return items;
+  }
+
+  function makeRecipes(typeCount, pairCount, random) {
+    const inputs = [];
+    for (let i = 0; i + 1 < typeCount; i += 2) inputs.push([i, i + 1]);
+    inputs.push([0, typeCount % 2 ? typeCount - 1 : 2]);
+    return inputs.map((pair, index) => ({
+      name: "合装 " + (index + 1) + " 号",
+      inputs: random() < .5 ? pair : [...pair].reverse(),
+      goal: Math.floor(pairCount / inputs.length) + (index < pairCount % inputs.length ? 1 : 0)
+    }));
+  }
+
+  function generateDispatch(stage, requestedMode = "") {
+    const modeOptions = [...modeNames.keys()];
+    const mode = modeNames.has(requestedMode) ? requestedMode : stage === 1 ? "standard"
+      : modeOptions[Math.floor(stageRandom(stage, 0xc4a68e71)() * modeOptions.length)];
+    const { laneCount, typeCount, pairCount } = stageScale(stage);
+    const random = stageRandom(stage, 0xf1ac27d0);
+    const loopLane = mode === "loop" ? 0 : undefined;
+    const arrivalLane = mode === "temporary" ? laneCount - 1 : undefined;
+    const arrivalMove = 2;
+    const recipes = mode === "orders" ? makeRecipes(typeCount, pairCount, random) : undefined;
+    const orders = recipes && randomize(recipes.flatMap(recipe => Array(recipe.goal).fill(recipe.inputs)), random);
+    const closeChance = .55 - .34 * stage / (stage + 16);
+    const crossChance = .45 + .48 * stage / (stage + 14);
+    const picks = [];
+    const stack = [];
+    const counts = Array(laneCount).fill(0);
+    const introductions = Array.from({ length: typeCount }, (_, i) => i);
+    const firstPairAt = new Map();
+    let unopened = pairCount;
+
+    // Generate a legal pickup sequence first. The lanes are reconstructed from it.
+    while (unopened || stack.length) {
+      const top = stack.at(-1);
+      const order = orders?.[unopened - 1];
+      const closing = top && (!unopened || stack.length === baseCapacity - 1 ||
+        (order && recipes.some(recipe => combineTypes(recipe.inputs, top.open, order[0]))) || random() < closeChance);
+      const available = counts.flatMap((count, lane) => lane === arrivalLane && picks.length < arrivalMove ? [] : [lane]);
+      const smallestLane = Math.min(...available.map(lane => counts[lane]));
+      let choices = available.filter(lane => counts[lane] <= smallestLane + 2);
+      if (closing && choices.length > 1 && random() < crossChance) choices = choices.filter(lane => lane !== top.lane);
+      const lane = choices[Math.floor(random() * choices.length)];
+      const rackIndex = stack.length - (closing ? 1 : 0);
+      let type;
+      if (closing) {
+        type = stack.pop().close;
+        if (!firstPairAt.has(type)) firstPairAt.set(type, picks.length + 1);
+      } else {
+        if (order) {
+          type = order[0];
+        } else {
+          const pool = introductions.length ? introductions : Array.from({ length: typeCount }, (_, i) => i);
+          const candidates = pool.filter(candidate => candidate !== top?.open);
+          type = candidates[Math.floor(random() * candidates.length)];
+          if (introductions.length) introductions.splice(introductions.indexOf(type), 1);
+        }
+        stack.push({ open: type, close: order?.[1] ?? type, lane });
+        unopened--;
+      }
+      picks.push({ type, lane, rackIndex });
+      counts[lane] += lane === arrivalLane ? 3 : 1;
+    }
+    let deadline;
+    if (mode === "rush") {
+      const [type, turn] = [...firstPairAt].filter(([, pick]) => pick <= 10).at(-1);
+      deadline = { type, pickLimit: Math.max(6, turn + (stage >= 20 ? 1 : 2)) };
+    }
+    return { mode, picks, laneCount, recipes, deadline, loopLane, arrivalLane, arrivalMove };
+  }
+
+  function assembleLanes(picks, laneCount, loopLane) {
+    const lanes = Array.from({ length: laneCount }, () => []);
+    for (const { lane, type } of picks) {
+      if (lane !== loopLane) lanes[lane].push(type);
+    }
+    if (loopLane === undefined) return lanes;
+    // Reverse each automatic rotation to find the starting order of the loop belt.
+    const loop = lanes[loopLane];
+    for (let i = picks.length - 1; i >= 0; i--) {
+      const { lane, type } = picks[i];
+      if (lane === loopLane) loop.unshift(type);
+      else if (loop.length > 1) loop.unshift(loop.pop());
+    }
+    return lanes;
+  }
+
+  function campaignLayout(stage, requestedMode = "") {
+    if (stage === 0) return tutorialLayout;
+    const { mode, picks, laneCount, recipes, deadline, loopLane, arrivalLane, arrivalMove } =
+      generateDispatch(stage, requestedMode);
+    return {
+      stage, mode, title: modeNames.get(mode),
+      capacity: mode === "dual" ? 2 : baseCapacity,
+      recipes, deadline, loopLane, arrivalLane, arrivalMove,
+      lanes: assembleLanes(picks, laneCount, loopLane)
+    };
+  }
+
+  function shuffleSequence(state, layout, stock, random) {
+    const held = [...state.rack].reverse();
+    if (state.secondRack) held.push(...[...state.secondRack].reverse());
+    const recipes = layout.recipes;
+    if (recipes) {
+      const due = recipes.map(({ goal }, index) => goal - state.packed[index]);
+      const order = [];
+      function matchHeld(index) {
+        if (index === held.length) return true;
+        const type = held[index];
+        for (const [recipeIndex, { inputs }] of recipes.entries()) {
+          if (!due[recipeIndex] || !inputs.includes(type)) continue;
+          const partner = inputs.find(input => input !== type);
+          if (!stock[partner]) continue;
+          stock[partner]--;
+          due[recipeIndex]--;
+          order.push(partner);
+          if (matchHeld(index + 1)) return true;
+          order.pop();
+          due[recipeIndex]++;
+          stock[partner]++;
+        }
+        return false;
+      }
+      if (!matchHeld(0)) return null;
+      const pairs = recipes.flatMap(({ inputs }, index) => Array(due[index]).fill(inputs));
+      return [...order, ...randomize(pairs, random).flat()];
+    }
+
+    for (const type of held) {
+      if (!stock[type]) return null;
+      stock[type]--;
+    }
+    if (stock.some(count => count % 2 !== 0)) return null;
+    const pairs = randomize(stock.flatMap((count, type) => Array(count / 2).fill(type)), random);
+    const { deadline } = layout;
+    if (!deadline || state.packed[deadline.type] > 0) {
+      return [...held, ...pairs.flatMap(type => [type, type])];
+    }
+    const limit = deadline.pickLimit - state.heads.reduce((sum, head) => sum + head, 0);
+    const heldIndex = held.indexOf(deadline.type);
+    if (heldIndex >= 0) {
+      if (heldIndex + 1 > limit) return null;
+    } else {
+      const pairIndex = pairs.indexOf(deadline.type);
+      if (pairIndex === -1 || held.length + 2 > limit) return null;
+      pairs.unshift(...pairs.splice(pairIndex, 1));
+    }
+    return [...held, ...pairs.flatMap(type => [type, type])];
+  }
+
+  function shuffledLanes(state, layout, random = Math.random) {
+    const stock = Array(parts.length).fill(0);
+    const lengths = state.lanes.map((lane, index) => {
+      const tail = lane.slice(state.heads[index]);
+      for (const type of tail) stock[type]++;
+      return tail.length;
+    });
+    const order = shuffleSequence(state, layout, stock, random);
+    if (!order || order.length !== lengths.reduce((sum, length) => sum + length, 0)) return null;
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const left = [...lengths];
+      const picks = order.map(type => {
+        const candidates = left.flatMap((count, index) => count > 0 ? [index] : []);
+        const lane = candidates[Math.floor(random() * candidates.length)];
+        left[lane]--;
+        return { type, lane };
+      });
+      const tails = assembleLanes(picks, lengths.length, layout.loopLane);
+      const result = state.lanes.map((lane, index) => [...lane.slice(0, state.heads[index]), ...tails[index]]);
+      if (result.some((lane, index) => lane.some((type, offset) => type !== state.lanes[index][offset]))) return result;
+    }
+    return null;
+  }
+
+  function readLocal(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch {
+      return null;
+    }
+  }
+
+  function loadProfiles() {
+    const saved = readLocal(profileStorageKey);
+    return Array.isArray(saved?.profiles) && saved.profiles.some(profile => profile?.id === saved.activeId) ? saved : null;
+  }
+
+  function makeProfile(profiles) {
+    let id, name;
+    do {
+      id = Math.random().toString(36).slice(2, 9);
+      name = "访客" + id.slice(0, 5).toUpperCase();
+    } while (profiles.some(profile => profile.id === id || profile.name === name));
+    return { id, name, bestStage: 0, tutorialDone: false };
+  }
+
+  function drawPart(part) {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 160;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(1.6, 1.6);
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+
+    function polygon(points) {
+      ctx.beginPath();
+      points.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+      ctx.closePath();
+    }
+
+    function polar(r, angle, x = 50, y = 47) {
+      return [x + Math.cos(angle) * r, y + Math.sin(angle) * r];
+    }
+
+    function circle(x, y, radius) {
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+    }
+
+    function rounded(x, y, w, h, radius) {
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, radius);
+    }
+
+    function shaded(fill, width = 2, stroke = part.line) {
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.lineWidth = width;
+      ctx.strokeStyle = stroke;
+      ctx.stroke();
+    }
+
+    function line(color, width, draw) {
+      ctx.beginPath();
+      draw();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.stroke();
+    }
+
+    const metal = ctx.createLinearGradient(14, 13, 81, 83);
+    metal.addColorStop(0, part.light);
+    metal.addColorStop(.52, part.face);
+    metal.addColorStop(1, part.dark);
+    const hole = ctx.createLinearGradient(40, 30, 61, 70);
+    hole.addColorStop(0, part.line);
+    hole.addColorStop(1, "#14242c");
+
+    function relief(draw) {
+      ctx.save();
+      ctx.translate(0, 7);
+      draw();
+      shaded(part.dark, 3);
+      ctx.restore();
+      draw();
+      shaded(metal, 2.4);
+    }
+
+    switch (part.shape) {
+      case "gear": {
+        const teeth = [];
+        for (let n = 0; n < 10; n++) {
+          const angle = n * Math.PI / 5;
+          teeth.push(polar(29, angle - .3), polar(38, angle - .15), polar(38, angle + .15), polar(29, angle + .3));
+        }
+        relief(() => polygon(teeth));
+        circle(50, 47, 20);
+        shaded(part.face, 1.8, part.dark);
+        circle(50, 47, 13);
+        shaded(hole, 1.8);
+        line(part.light, 2, () => ctx.arc(50, 47, 23.5, 3.7, 5.2));
+        break;
+      }
+      case "battery": {
+        ctx.save();
+        ctx.translate(50, 47);
+        ctx.rotate(-.25);
+        ctx.translate(-50, -47);
+        rounded(42, 11, 16, 13, 3);
+        shaded(part.light, 2);
+        relief(() => rounded(29, 20, 42, 53, 8));
+        rounded(35, 26, 30, 9, 3);
+        shaded("#3e633c", 1);
+        polygon([[53, 37], [41, 52], [49, 52], [47, 64], [60, 48], [52, 48]]);
+        shaded("#eefac3", 1.2, part.dark);
+        line(part.light, 2, () => { ctx.moveTo(33, 38); ctx.lineTo(33, 58); });
+        ctx.restore();
+        break;
+      }
+      case "spring": {
+        ctx.save();
+        ctx.translate(50, 47);
+        ctx.rotate(-.19);
+        ctx.translate(-50, -47);
+        for (let i = 4; i >= 0; i--) {
+          const y = 21 + i * 13;
+          line(part.line, 10, () => ctx.ellipse(50, y + 3, 23, 7, 0, 0, Math.PI * 2));
+          line(part.dark, 6, () => ctx.ellipse(50, y, 23, 7, 0, 0, Math.PI * 2));
+        }
+        line(part.line, 10, () => {
+          ctx.moveTo(28, 24);
+          for (let i = 0; i < 4; i++) {
+            const y = 24 + i * 13;
+            ctx.bezierCurveTo(28, y + 8, 73, y + 4, 73, y + 8);
+            ctx.quadraticCurveTo(73, y + 12, 28, y + 13);
+          }
+        });
+        line(part.face, 5.5, () => {
+          ctx.moveTo(28, 24);
+          for (let i = 0; i < 4; i++) {
+            const y = 24 + i * 13;
+            ctx.bezierCurveTo(28, y + 8, 73, y + 4, 73, y + 8);
+            ctx.quadraticCurveTo(73, y + 12, 28, y + 13);
+          }
+        });
+        for (let i = 0; i < 4; i++) {
+          const y = 24 + i * 13;
+          line(part.light, 1.8, () => {
+            ctx.moveTo(33, y + 2);
+            ctx.quadraticCurveTo(42, y + 4.5, 58, y + 4.6);
+          });
+        }
+        ctx.restore();
+        break;
+      }
+      case "nut": {
+        relief(() => polygon(Array.from({ length: 6 }, (_, i) => polar(36, i * Math.PI / 3 + .11))));
+        circle(50, 47, 23);
+        shaded(part.face, 1.6, part.dark);
+        circle(50, 47, 16);
+        shaded(hole, 2);
+        line(part.light, 2, () => { ctx.moveTo(23, 44); ctx.lineTo(37, 23); ctx.lineTo(62, 24); });
+        line(part.dark, 1.5, () => ctx.arc(50, 47, 19.5, -.2, 1.85));
+        break;
+      }
+      case "washer": {
+        ctx.save();
+        ctx.translate(50, 47);
+        ctx.rotate(.23);
+        ctx.translate(-50, -47);
+        relief(() => rounded(18, 19, 64, 56, 13));
+        circle(50, 47, 19);
+        shaded(part.face, 1.5, part.dark);
+        circle(50, 47, 12);
+        shaded(hole, 1.5);
+        [28, 72].forEach(x => {
+          circle(x, 47, 2.8);
+          shaded(part.dark, 1);
+        });
+        line(part.light, 2, () => { ctx.moveTo(29, 25); ctx.lineTo(69, 25); });
+        ctx.restore();
+        break;
+      }
+      case "bearing": {
+        relief(() => circle(50, 47, 35));
+        circle(50, 47, 29);
+        shaded(part.dark, 1.8);
+        for (let i = 0; i < 8; i++) {
+          const [x, y] = polar(22.5, i * Math.PI / 4);
+          circle(x, y, 4.2);
+          shaded(part.light, 1);
+        }
+        circle(50, 47, 15.7);
+        shaded(metal, 1.5);
+        circle(50, 47, 10.5);
+        shaded(hole, 1.3);
+        line(part.light, 1.8, () => ctx.arc(50, 47, 32, 3.6, 5.05));
+        break;
+      }
+      default: {
+        const outlines = {
+          clip: [[13,26],[30,17],[42,26],[38,49],[50,61],[62,49],[58,26],[70,17],[87,26],[82,67],[63,80],[37,80],[18,67]],
+          plug: [[25,17],[67,17],[67,31],[79,31],[79,64],[68,64],[68,79],[31,79],[31,64],[19,64],[19,32],[25,32]],
+          chip: [[24,23],[39,23],[39,15],[49,15],[49,23],[62,23],[62,15],[72,15],[72,23],[81,23],[81,72],[72,72],[72,79],[62,79],[62,72],[49,72],[49,79],[39,79],[39,72],[24,72]],
+          wing: [[14,23],[38,28],[48,39],[59,29],[85,22],[82,72],[61,67],[49,58],[37,69],[14,75]],
+          plate: [[50,13],[86,39],[67,79],[34,79],[13,39]]
+        };
+        ctx.save();
+        ctx.translate(50, 47);
+        ctx.rotate(part.shape === "pin" ? -.48 : -.14);
+        ctx.translate(-50, -47);
+        if (part.shape === "dial") relief(() => circle(50, 47, 35));
+        else if (part.shape === "pin") relief(() => rounded(29, 12, 42, 70, 13));
+        else relief(() => polygon(outlines[part.shape]));
+        circle(50, 47, part.shape === "pin" ? 15 : 17);
+        shaded(part.light, 1.5);
+        ctx.fillStyle = part.line;
+        ctx.font = "700 25px system-ui";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(part.mark, 50, 48);
+        ctx.restore();
+      }
+    }
+    return canvas.toDataURL();
+  }
+
+  const partImages = parts.map(drawPart);
+  const byId = (id) => document.getElementById(id);
+  const dom = {
+    machine: document.querySelector(".machine"), lanes: byId("lanes"), rack: byId("rack"), capacity: byId("capacity"), status: byId("status"),
+    mission: byId("mission"), missionTitle: byId("mission-title"), recipes: byId("recipe-strip"),
+    missionSub: byId("mission-sub"),
+    guideLayer: byId("guide-layer"), guideSpotlight: byId("guide-spotlight"), guideCard: byId("guide-card"),
+    guideStep: byId("guide-step"), guideCopy: byId("guide-copy"), guideSkip: byId("guide-skip"),
+    packed: byId("packed"), target: byId("target"), progress: byId("progress"),
+    restart: byId("restart"), undo: byId("undo"), shuffle: byId("shuffle"), sound: byId("sound"),
+    result: byId("result"), resultTitle: byId("result-title"), resultSign: byId("result-sign"),
+    resultCopy: byId("result-copy"), next: byId("result-next"), retry: byId("result-retry"),
+    resultUndo: byId("result-undo"), resultShuffle: byId("result-shuffle"),
+    resultBack: byId("result-back"), resultNote: byId("result-note"),
+    reward: byId("reward"), rewardTitle: byId("reward-title"), rewardCopy: byId("reward-copy"),
+    rewardSkip: byId("reward-skip"), rewardClaim: byId("reward-claim"),
+    help: byId("help"), openHelp: byId("open-help"), replayTutorial: byId("replay-tutorial"),
+    stagePicker: byId("stage-picker"), openStagePicker: byId("open-stage-picker"),
+    stageForm: byId("stage-form"), stageNumber: byId("stage-number"), stageReturn: byId("stage-return"),
+    stageMode: byId("stage-mode"),
+    rackBay: byId("rack-bay"), rightRack: byId("right-rack"), rightRackPanel: byId("right-rack-panel"),
+    rackSelectors: [byId("choose-left-rack"), byId("choose-right-rack")],
+    main: byId("open-main"), openRank: byId("open-rank"),
+    leaderboard: byId("leaderboard"), rankList: byId("rank-list"), rankEmpty: byId("rank-empty"), rankScope: byId("rank-scope"),
+    profileSettings: byId("profile-settings"), profilePicker: byId("profile-picker"),
+    profileForm: byId("profile-form"), profileName: byId("profile-name"),
+    newProfile: byId("new-profile"), profileFeedback: byId("profile-feedback")
+  };
+
+  const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let mainRound = null;
+  const flights = new Set();
+  let storageAvailable = true;
+  let profileStore = loadProfiles();
+  if (!profileStore) {
+    const guest = makeProfile([]);
+    profileStore = { activeId: guest.id, profiles: [guest] };
+    persistProfiles();
+  }
+  let activeId = profileStore.activeId;
+  let networkRegion = readLocal(regionStorageKey);
+  let regionPending = false;
+  let regionRetryAt = 0;
+  let game;
+  let audioContext;
+  let soundEnabled = false;
+  let busy = false;
+  let pendingReward = null;
+
+  function persistProfiles() {
+    try {
+      localStorage.setItem(profileStorageKey, JSON.stringify(profileStore));
+      storageAvailable = true;
+    } catch {
+      storageAvailable = false;
+    }
+  }
+
+  function refreshProfiles() {
+    if (storageAvailable) profileStore = loadProfiles() ?? profileStore;
+  }
+
+  function activeProfile() {
+    return profileStore.profiles.find(profile => profile.id === activeId);
+  }
+
+  function updateProfile(changes) {
+    refreshProfiles();
+    Object.assign(activeProfile(), changes(activeProfile()));
+    persistProfiles();
+  }
+
+  function applyNetworkRegion(region) {
+    if (region && activeProfile().networkRegion !== region) updateProfile(() => ({ networkRegion: region }));
+  }
+
+  async function refreshNetworkRegion() {
+    if (networkRegion?.region && Date.now() - networkRegion.checkedAt < regionCacheAge) {
+      applyNetworkRegion(networkRegion.region);
+      return;
+    }
+    if (regionPending || Date.now() < regionRetryAt) return;
+    regionPending = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3500);
+    try {
+      const response = await fetch("https://api.ip.sb/geoip", {
+        credentials: "omit",
+        referrerPolicy: "no-referrer",
+        signal: controller.signal
+      });
+      if (!response.ok) return;
+      const region = regionFromNetwork(await response.json());
+      if (!region) return;
+      networkRegion = { region, checkedAt: Date.now() };
+      applyNetworkRegion(region);
+      try {
+        localStorage.setItem(regionStorageKey, JSON.stringify(networkRegion));
+      } catch {
+        // The region cache remains available for this page.
+      }
+    } catch {
+      // An offline or blocked lookup leaves the existing region available.
+    } finally {
+      clearTimeout(timeout);
+      regionPending = false;
+      regionRetryAt = Date.now() + 60 * 1000;
+      if (dom.leaderboard.open) renderRanking();
+    }
+  }
+
+  function partImage(type) {
+    const image = new Image();
+    image.className = "part";
+    image.src = partImages[type];
+    image.alt = "";
+    image.draggable = false;
+    return image;
+  }
+
+  function snapshot() {
+    return {
+      lanes: game.lanes,
+      heads: [...game.heads],
+      rack: [...game.rack],
+      packed: [...game.packed],
+      ...(game.secondRack ? { secondRack: [...game.secondRack], rackChoice: game.rackChoice } : {})
+    };
+  }
+
+  function openRound(round, focusPlayer = false) {
+    if (dom.reward.open) closeReward(false);
+    game = round;
+    if (!round.testing) mainRound = round;
+    busy = false;
+    flights.forEach(animation => animation.cancel());
+    if (dom.result.open) dom.result.close();
+    render();
+    dom.lanes.scrollTop = 0;
+    if (focusPlayer) lanes.find(lane => lane.pickup.tabIndex === 0)?.pickup.focus({ preventScroll: true });
+  }
+
+  function start(layout, focusPlayer = false, testing = false) {
+    openRound({
+      layout, testing,
+      target: layout.lanes.reduce((total, lane) => total + lane.length / 2, 0),
+      lanes: layout.lanes, heads: layout.lanes.map(() => 0), rack: [], packed: parts.map(() => 0),
+      history: [], undoUsed: 0, shuffleUsed: false, shiftUsed: false, extraSlots: 0, phase: "playing",
+      loss: "",
+      ...(layout.mode === "dual" ? { secondRack: [], rackChoice: 0 } : {}),
+      message: { text: "", tone: "" }
+    }, focusPlayer);
+  }
+
+  function resumeMain() {
+    const profile = activeProfile();
+    if (mainRound?.phase === "playing") openRound(mainRound);
+    else start(campaignLayout(profile.tutorialDone ? profile.bestStage + 1 : 0));
+  }
+
+  function pickCount() {
+    return game.heads.reduce((sum, count) => sum + count, 0);
+  }
+
+  function packedCount() {
+    return game.packed.reduce((sum, count) => sum + count, 0);
+  }
+
+  function currentGuide() {
+    return game.layout.mode === "tutorial" ? tutorial[pickCount()] : undefined;
+  }
+
+  function toolsEnabled() {
+    return game.layout.mode !== "tutorial";
+  }
+
+  function canExpand() {
+    return toolsEnabled() && !game.secondRack;
+  }
+
+  function capacity() {
+    return game.layout.capacity + game.extraSlots;
+  }
+
+  function selectedRack() {
+    return game.rackChoice === 1 ? game.secondRack : game.rack;
+  }
+
+  function pairIndex(tail, incoming) {
+    if (tail === undefined || incoming === undefined) return -1;
+    const recipes = game.layout.recipes;
+    if (!recipes) return tail === incoming ? incoming : -1;
+    return recipes.findIndex(({ inputs, goal }, index) =>
+      game.packed[index] < goal && combineTypes(inputs, tail, incoming));
+  }
+
+  function undoRemaining() {
+    const total = toolsEnabled() ? maxUndoUses : 0;
+    return total - game.undoUsed;
+  }
+
+  function canUndo() {
+    return !busy && game.phase !== "won" && game.history.length > 0 && undoRemaining() > 0;
+  }
+
+  function canShuffle() {
+    const possibleMove = pickCount();
+    return !busy && toolsEnabled() && !game.shuffleUsed && game.phase !== "won" && possibleMove > 0 &&
+      (game.layout.arrivalLane === undefined || possibleMove >= game.layout.arrivalMove);
+  }
+
+  function visibleLane(index) {
+    const queue = game.lanes[index];
+    if (!queue) return false;
+    return index !== game.layout.arrivalLane ||
+      (pickCount() >= game.layout.arrivalMove && game.heads[index] < queue.length);
+  }
+
+  function canShift(index) {
+    return !busy && game.phase === "playing" && game.layout.mode === "shift" && !game.shiftUsed &&
+      game.lanes[index].length - game.heads[index] > 1;
+  }
+
+  function placeGuide(guide = currentGuide()) {
+    if (!guide || dom.guideLayer.hidden) return;
+    const lane = lanes[guide.lane];
+    const target = lane.pickup.getBoundingClientRect();
+    const preview = guide.preview ? lane.preview[1].getBoundingClientRect() : target;
+    const padding = 4;
+    const frame = {
+      left: Math.min(target.left, preview.left) - padding,
+      top: Math.min(target.top, preview.top) - padding,
+      right: target.right + padding,
+      bottom: Math.max(target.bottom, preview.bottom) + padding
+    };
+    Object.assign(dom.guideSpotlight.style, {
+      left: frame.left + "px",
+      top: frame.top + "px",
+      width: frame.right - frame.left + "px",
+      height: frame.bottom - frame.top + "px"
+    });
+
+    const inset = 12;
+    const gap = 13;
+    const viewport = dom.guideLayer.getBoundingClientRect();
+    const width = Math.min(318, viewport.width - inset * 2);
+    const left = Math.max(inset, Math.min(target.right - width, viewport.width - width - inset));
+    const arrow = Math.max(14, Math.min(width - 14, (target.left + target.right) / 2 - left));
+    Object.assign(dom.guideCard.style, { width: width + "px", left: left + "px" });
+    dom.guideCard.style.setProperty("--guide-arrow", arrow + "px");
+    const above = frame.top - gap - dom.guideCard.offsetHeight;
+    const below = above < inset && frame.bottom + gap + dom.guideCard.offsetHeight <= viewport.height - inset;
+    dom.guideCard.dataset.side = below ? "below" : "above";
+    dom.guideCard.style.top = (below ? frame.bottom + gap : Math.max(inset, above)) + "px";
+  }
+
+  function renderGuide(guide) {
+    dom.guideLayer.hidden = !guide;
+    if (!guide) return;
+    dom.guideStep.textContent = "第 " + (pickCount() + 1) + " / " + tutorial.length + " 步";
+    if (dom.guideCopy.textContent !== guide.copy) dom.guideCopy.textContent = guide.copy;
+    placeGuide(guide);
+  }
+
+  function renderMission() {
+    const { layout } = game;
+    let subtitle = "", urgent = false;
+    dom.mission.dataset.mode = layout.mode;
+    dom.missionTitle.textContent = layout.stage > 0 ? "第 " + layout.stage + " 关" : layout.title;
+    if (game.testing) dom.missionTitle.textContent += " · 测试";
+    switch (layout.mode) {
+      case "rush": {
+        const { pickLimit, type } = layout.deadline;
+        const remaining = Math.max(0, pickLimit - pickCount());
+        subtitle = game.packed[type] ? "限步急单 · 已交付" : "限步急单 · " + parts[type].name + " · 剩 " + remaining + " 步";
+        urgent = !game.packed[type] && remaining <= 3;
+        break;
+      }
+      case "orders":
+        subtitle = layout.recipes.length > 3 ? "合装订单 · 横滑查看配方" : "合装订单 · 按配方装箱";
+        break;
+      case "dual":
+        subtitle = "双暂存架 · 先选架，再取件";
+        break;
+      case "loop":
+        subtitle = "循环带 · 其他带出件，蓝带就转一格";
+        break;
+      case "temporary":
+        subtitle = pickCount() < layout.arrivalMove ? "临时来料 · 取两件后入场"
+          : visibleLane(layout.arrivalLane) ? "临时来料 · 金色带已入场" : "临时来料 · 金色带已离场";
+        break;
+      case "shift":
+        subtitle = game.shiftUsed ? "换挡带 · 本局换挡已用" : "换挡带 · 点 ↻ 把队首移到队尾";
+        break;
+    }
+    dom.missionSub.textContent = subtitle;
+    dom.missionSub.hidden = !subtitle;
+    dom.missionSub.dataset.warning = String(urgent);
+  }
+
+  function renderRecipes() {
+    const recipes = game.layout.recipes;
+    dom.recipes.hidden = !recipes;
+    if (!recipes) return;
+    dom.recipes.tabIndex = recipes.length > 3 ? 0 : -1;
+    dom.recipes.replaceChildren(...recipes.map(({ name, inputs, goal }, index) => {
+      const card = document.createElement("div");
+      const made = game.packed[index];
+      card.className = "recipe-card";
+      card.dataset.done = String(made === goal);
+      card.dataset.partner = String(made < goal && inputs.includes(game.rack.at(-1)));
+      card.setAttribute("role", "img");
+      card.setAttribute("aria-label", name + "，" + inputs.map(type => parts[type].name).join("加") + "，完成 " + made + "/" + goal);
+      const count = document.createElement("span");
+      count.className = "recipe-count";
+      count.textContent = made + "/" + goal;
+      card.append(partImage(inputs[0]), "+", partImage(inputs[1]), count);
+      return card;
+    }));
+  }
+
+  function renderRack(element, items, openSlots, displayedSlots) {
+    element.style.gridTemplateColumns = "repeat(" + displayedSlots + ", minmax(0, 1fr))";
+    element.setAttribute("aria-label", items.length
+      ? "从左到右：" + items.map(type => parts[type].name).join("、")
+      : "暂存架为空");
+    const slots = Array.from({ length: displayedSlots }, (_, i) => {
+      if (i >= openSlots) {
+        const lock = document.createElement("button");
+        lock.type = "button";
+        lock.className = "slot slot-lock";
+        lock.disabled = i !== openSlots || busy || game.phase !== "playing";
+        lock.textContent = i === openSlots ? "▶ +1" : "+1";
+        lock.setAttribute("aria-label", i === openSlots
+          ? "看模拟视频，解锁第 " + (i + 1) + " 格"
+          : "第 " + (i + 1) + " 格，需先解锁前一格");
+        lock.addEventListener("click", unlockSlot);
+        return lock;
+      }
+      const slot = document.createElement("div");
+      const type = items[i];
+      slot.className = "slot";
+      slot.dataset.occupied = String(type !== undefined);
+      slot.dataset.active = String(i === items.length - 1);
+      slot.title = type === undefined ? "空位" : parts[type].name;
+      if (type !== undefined) slot.append(partImage(type));
+      return slot;
+    });
+    element.replaceChildren(...slots);
+  }
+
+  function render() {
+    const items = selectedRack();
+    const last = items.at(-1);
+    const openSlots = capacity();
+    const room = openSlots - items.length;
+    const hasTools = toolsEnabled();
+    const guide = currentGuide();
+    renderMission();
+    renderRecipes();
+    dom.main.setAttribute("aria-pressed", String(!game.testing));
+    dom.restart.disabled = busy;
+    dom.undo.hidden = game.layout.mode === "tutorial";
+    dom.undo.disabled = !canUndo() || game.phase !== "playing";
+    dom.undo.textContent = game.undoUsed && undoRemaining() ? "撤回 ▶" : "撤回";
+    dom.undo.setAttribute("aria-label", game.undoUsed && undoRemaining()
+      ? "看模拟视频撤回，剩 " + undoRemaining() + " 次"
+      : "撤回，剩 " + undoRemaining() + " 次");
+    dom.shuffle.hidden = !hasTools;
+    dom.shuffle.disabled = !canShuffle() || game.phase !== "playing";
+    dom.capacity.hidden = Boolean(game.secondRack);
+    dom.capacity.textContent = items.length + " / " + openSlots;
+    dom.capacity.setAttribute("aria-label", "暂存架占用 " + items.length + " 格，共 " + openSlots + " 格");
+    dom.capacity.dataset.state = room === 0 ? "full" : room === 1 ? "warning" : "";
+    dom.status.hidden = game.layout.mode === "tutorial" || !game.message.text;
+    dom.status.textContent = game.message.text;
+    dom.status.dataset.tone = game.message.tone;
+
+    dom.lanes.dataset.count = String(game.lanes.length);
+    const dense = String(game.lanes.length >= 5);
+    dom.machine.dataset.dense = dense;
+    dom.lanes.dataset.dense = dense;
+    lanes.forEach((lane, index) => {
+      const queue = game.lanes[index];
+      lane.element.hidden = !visibleLane(index);
+      if (lane.element.hidden) {
+        lane.pickup.tabIndex = -1;
+        return;
+      }
+      const loop = index === game.layout.loopLane;
+      lane.element.dataset.loop = String(loop);
+      lane.element.dataset.arrival = String(index === game.layout.arrivalLane);
+      const remaining = queue.slice(game.heads[index]);
+      lane.preview.forEach((cell, slot) => {
+        const type = remaining[2 - slot];
+        cell.dataset.empty = String(type === undefined);
+        cell.dataset.guide = String(index === guide?.lane && guide.preview === true && slot === 1);
+        cell.replaceChildren();
+        if (type !== undefined) cell.append(partImage(type));
+      });
+      lane.count.textContent = (loop ? "↻" : "") + remaining.length;
+      const shiftMode = game.layout.mode === "shift";
+      lane.shift.hidden = !shiftMode;
+      lane.count.hidden = shiftMode;
+      if (shiftMode) {
+        lane.shift.disabled = !canShift(index);
+        lane.shift.lastElementChild.textContent = remaining.length;
+        lane.shift.setAttribute("aria-label", "换挡 " + (index + 1) + " 号带，剩余 " + remaining.length + " 件");
+      }
+      const head = remaining[0];
+      const waiting = guide && index !== guide.lane;
+      lane.pickup.dataset.empty = String(head === undefined);
+      const canPair = pairIndex(last, head) >= 0;
+      lane.pickup.dataset.match = String(canPair);
+      lane.pickup.dataset.guide = !guide || head === undefined ? "" : waiting ? "wait" : "next";
+      if (guide && !waiting) lane.pickup.setAttribute("aria-describedby", "guide-copy");
+      else lane.pickup.removeAttribute("aria-describedby");
+      // aria-disabled keeps keyboard focus stable during the short pickup animation.
+      lane.pickup.setAttribute("aria-disabled", String(busy || head === undefined || !!waiting || game.phase !== "playing"));
+      lane.pickup.tabIndex = head === undefined || waiting || game.phase !== "playing" ? -1 : 0;
+      lane.pickup.setAttribute("aria-label", head === undefined
+        ? index + 1 + " 号带已空"
+        : (loop ? "循环带" : index === game.layout.arrivalLane ? "临时来料带" : index + 1 + " 号带") +
+          "取件：" + parts[head].name + (canPair ? "，可配对" : "") +
+          "，剩余 " + remaining.length + " 件" +
+          (remaining.length > 1 ? "。后面：" + remaining.slice(1, 3).map(type => parts[type].name).join("、") : ""));
+      lane.pickup.replaceChildren();
+      if (head !== undefined) {
+        lane.pickup.append(partImage(head));
+      } else {
+        const mark = document.createElement("span");
+        mark.className = "empty-mark";
+        mark.textContent = "–";
+        lane.pickup.append(mark);
+      }
+    });
+
+    const displayedSlots = canExpand() ? baseCapacity + maxExtraSlots : openSlots;
+    const dual = Boolean(game.secondRack);
+    dom.rackBay.dataset.dual = String(dual);
+    dom.rightRackPanel.hidden = !dual;
+    dom.rackSelectors[0].hidden = !dual;
+    renderRack(dom.rack, game.rack, openSlots, displayedSlots);
+    if (dual) {
+      renderRack(dom.rightRack, game.secondRack, openSlots, displayedSlots);
+      dom.rackSelectors.forEach((selector, index) => {
+        const size = (index === 0 ? game.rack : game.secondRack).length;
+        selector.disabled = busy || game.phase !== "playing";
+        selector.textContent = (index === 0 ? "左架" : "右架") + " " + size + "/" + openSlots;
+        selector.setAttribute("aria-pressed", String(game.rackChoice === index));
+      });
+    }
+
+    const packed = packedCount();
+    dom.packed.textContent = packed * 2;
+    dom.target.textContent = "/ " + game.target * 2 + " 个";
+    dom.progress.max = game.target * 2;
+    dom.progress.value = packed * 2;
+    renderGuide(guide);
+  }
+
+  function animatePickup(image, target, match) {
+    if (prefersReducedMotion.matches || !image || !target || typeof image.animate !== "function") return Promise.resolve();
+    const from = image.getBoundingClientRect();
+    const to = target.getBoundingClientRect();
+    const x = to.left + (to.width - from.width) / 2 - from.left;
+    const y = to.top + (to.height - from.height) / 2 - from.top;
+    const clone = image.cloneNode();
+    clone.classList.add("flight");
+    clone.style.left = from.left + "px";
+    clone.style.top = from.top + "px";
+    clone.style.width = from.width + "px";
+    clone.setAttribute("aria-hidden", "true");
+    document.body.append(clone);
+    image.style.visibility = "hidden";
+    const motion = clone.animate([
+      { transform: "translate(0, 0) scale(1)" },
+      { transform: "translate(" + x * .85 + "px, " + y * .55 + "px) scale(1.06)", offset: .58 },
+      { transform: "translate(" + x + "px, " + y + "px) scale(" + (match ? .76 : .93) + ")" }
+    ], { duration: 200, easing: "cubic-bezier(.31,.73,.42,1)" });
+    flights.add(motion);
+    return motion.finished.catch(() => {}).finally(() => {
+      flights.delete(motion);
+      clone.remove();
+      image.style.visibility = "";
+    });
+  }
+
+  function animateSlot(slot, match) {
+    if (prefersReducedMotion.matches || !slot || typeof slot.animate !== "function") return;
+    slot.animate(match ? [
+      { boxShadow: "inset 0 0 0 2px #ba6c24, 0 0 17px #ffc66b99", background: "#fff0c5" },
+      { boxShadow: "inset 0 4px 8px #431f172b" }
+    ] : [
+      { transform: "scale(.95)" }, { transform: "scale(1.025)" }, { transform: "scale(1)" }
+    ], { duration: 240, easing: "ease-out" });
+  }
+
+  function animateFeed(lane) {
+    if (prefersReducedMotion.matches || typeof lane.track.animate !== "function") return;
+    const cells = [...lane.preview, lane.pickup];
+    const centers = cells.map(cell => {
+      const bounds = cell.getBoundingClientRect();
+      return bounds.left + bounds.width / 2;
+    });
+    const beltOptions = { duration: 210, easing: "cubic-bezier(.24,.72,.3,1)" };
+    lane.track.animate([
+      { backgroundPosition: "0 0, 0 0" },
+      { backgroundPosition: "48px 0, 0 0" }
+    ], beltOptions);
+    cells.forEach((cell, index) => {
+      const image = cell.querySelector("img");
+      if (!image) return;
+      const distance = index === 0 ? 29 : centers[index] - centers[index - 1];
+      image.animate([
+        { transform: "translateX(" + -distance + "px)", opacity: index === 0 ? 0 : 1 },
+        { transform: "translateX(0)", opacity: 1 }
+      ], beltOptions);
+    });
+  }
+
+  function rotateLane(index) {
+    const queue = game.lanes[index];
+    const head = game.heads[index];
+    if (queue.length - head < 2) return;
+    const rotated = [...queue.slice(0, head), ...queue.slice(head + 1), queue[head]];
+    game.lanes = game.lanes.map((items, lane) => lane === index ? rotated : items);
+    return lanes[index];
+  }
+
+  function rememberBoard() {
+    if (!toolsEnabled()) return;
+    game.history.push(snapshot());
+    if (game.history.length > maxUndoUses) game.history.shift();
+  }
+
+  function shiftLane(index) {
+    if (!canShift(index)) return;
+    rememberBoard();
+    const shifted = rotateLane(index);
+    game.shiftUsed = true;
+    render();
+    animateFeed(shifted);
+  }
+
+  async function take(index) {
+    if (busy || game.phase !== "playing" || !visibleLane(index)) return;
+    const guide = currentGuide();
+    if (guide && index !== guide.lane) return;
+    const type = game.lanes[index]?.[game.heads[index]];
+    if (type === undefined) return;
+
+    const currentGame = game;
+    const lane = lanes[index];
+    const rack = selectedRack();
+    const rackElement = game.rackChoice === 1 ? dom.rightRack : dom.rack;
+    const pair = pairIndex(rack.at(-1), type);
+    const match = pair >= 0;
+    const slotIndex = match ? rack.length - 1 : rack.length;
+    busy = true;
+    lanes.forEach(({ pickup }) => pickup.setAttribute("aria-disabled", "true"));
+    dom.restart.disabled = dom.undo.disabled = dom.shuffle.disabled = true;
+    dom.rack.querySelectorAll(".slot-lock").forEach(lock => { lock.disabled = true; });
+    await animatePickup(lane.pickup.querySelector("img"), rackElement.children[slotIndex], match);
+    if (game !== currentGame) return;
+
+    rememberBoard();
+    game.heads[index]++;
+    const loopLane = game.layout.loopLane;
+    const advancedLane = loopLane !== undefined && loopLane !== index ? rotateLane(loopLane) : null;
+    if (match) {
+      rack.pop();
+      game.packed[pair]++;
+      const recipe = game.layout.recipes?.[pair];
+      game.message = { text: recipe ? "完成一份" + recipe.name : "已装箱一对" + parts[type].name, tone: "match" };
+    } else {
+      rack.push(type);
+      game.message = { text: "", tone: "" };
+    }
+
+    const room = capacity() - rack.length;
+    const deadline = game.layout.deadline;
+    if (room === 0) {
+      game.phase = "lost";
+      game.loss = "full";
+      game.message = { text: "暂存架已满。", tone: "danger" };
+    } else if (deadline && !game.packed[deadline.type] && pickCount() >= deadline.pickLimit) {
+      game.phase = "lost";
+      game.loss = "deadline";
+      game.message = { text: "急单超时。", tone: "danger" };
+    } else if (packedCount() === game.target) {
+      game.phase = "won";
+      game.message = { text: "全部零件已装箱。", tone: "match" };
+      if (!game.testing) {
+        updateProfile(profile => ({
+          tutorialDone: true,
+          bestStage: Math.max(profile.bestStage, game.layout.stage)
+        }));
+      }
+    } else if (!match && room === 1 && !game.secondRack) {
+      game.message = { text: "仅剩 1 格", tone: "warning" };
+    }
+    busy = false;
+    render();
+    animateSlot(rackElement.children[slotIndex], match);
+    animateFeed(lane);
+    if (advancedLane) animateFeed(advancedLane);
+    playSound(game.phase === "lost" ? "lost" : match ? "match" : "take");
+    if (game.phase !== "playing") {
+      showResult();
+    } else if (lane.pickup.tabIndex === -1 && document.activeElement === lane.pickup) {
+      lanes.find(candidate => candidate.pickup.tabIndex === 0)?.pickup.focus({ preventScroll: true });
+    }
+  }
+
+  function showReward(title, copy, apply) {
+    if (busy || dom.reward.open) return;
+    pendingReward = { round: game, apply };
+    dom.rewardTitle.textContent = title;
+    dom.rewardCopy.textContent = copy;
+    dom.reward.showModal();
+    dom.rewardSkip.focus({ preventScroll: true });
+  }
+
+  function closeReward(claimed) {
+    const reward = pendingReward;
+    pendingReward = null;
+    if (dom.reward.open) dom.reward.close();
+    if (claimed && reward?.round === game) reward.apply();
+  }
+
+  function resumeAfterTool(message) {
+    game.phase = "playing";
+    game.loss = "";
+    game.message = { text: message, tone: "" };
+    if (dom.result.open) dom.result.close();
+    render();
+    (lanes.find(lane => lane.pickup.tabIndex === 0)?.pickup ?? dom.restart).focus({ preventScroll: true });
+  }
+
+  function undo() {
+    if (!canUndo() || dom.reward.open) return;
+    const apply = () => {
+      Object.assign(game, game.history.pop());
+      game.undoUsed++;
+      resumeAfterTool("已撤回");
+    };
+    if (game.undoUsed === 0) apply();
+    else showReward("追加撤回", "看完后撤回一步。本局还可撤回 " + undoRemaining() + " 次。", apply);
+  }
+
+  function shuffleRemaining() {
+    if (!canShuffle() || dom.reward.open) return;
+    const failed = game.phase === "lost";
+    const state = failed ? game.history.at(-1) : snapshot();
+    const rearranged = state && shuffledLanes(state, game.layout);
+    if (!rearranged) {
+      const message = "当前没有可用的打乱方案";
+      if (dom.result.open) {
+        dom.resultNote.textContent = message;
+        dom.resultNote.hidden = false;
+      } else {
+        game.message = { text: message, tone: "" };
+        render();
+      }
+      return;
+    }
+    const copy = failed
+      ? "回到失败前一步，重新排布各带剩余零件。本局限 1 次。"
+      : "重新排布各带剩余零件，保留暂存架和装箱进度。本局限 1 次。";
+    showReward("打乱传送带", copy, () => {
+      Object.assign(game, state, { lanes: rearranged });
+      game.shuffleUsed = true;
+      game.history.length = 0;
+      resumeAfterTool("已打乱");
+    });
+  }
+
+  function unlockSlot() {
+    if (busy || !canExpand() || game.phase !== "playing" || game.extraSlots >= maxExtraSlots) return;
+    const nextCapacity = capacity() + 1;
+    showReward("解锁第 " + nextCapacity + " 格", "看完后本局多 1 个暂存格。", () => {
+      game.extraSlots++;
+      game.message = { text: "暂存架已扩到 " + capacity() + " 格", tone: "" };
+      render();
+      (dom.rack.querySelector(".slot-lock:not(:disabled)") ?? dom.restart).focus({ preventScroll: true });
+    });
+  }
+
+  function showResult() {
+    const won = game.phase === "won";
+    const packed = packedCount();
+    dom.result.dataset.result = game.phase;
+    dom.resultNote.hidden = true;
+    dom.resultSign.textContent = won ? "本关完成" : "分拣中断";
+    if (won) {
+      dom.resultTitle.textContent = "全部装箱！";
+      dom.resultCopy.textContent = game.layout.mode === "tutorial"
+        ? "接下来，试试自己安排取件顺序。"
+        : "已装箱 " + game.target * 2 + " 个零件。";
+    } else if (game.loss === "deadline") {
+      dom.resultTitle.textContent = "急单超时";
+      dom.resultCopy.textContent = "本轮未能在限额内配对" + parts[game.layout.deadline.type].name + "。";
+    } else {
+      dom.resultTitle.textContent = game.secondRack
+        ? (game.rackChoice === 0 ? "左架满了" : "右架满了")
+        : "暂存架满了";
+      dom.resultCopy.textContent = "已装箱 " + packed * 2 + " / " + game.target * 2 + " 个。";
+    }
+    dom.next.hidden = !won;
+    dom.next.textContent = game.layout.mode === "tutorial" ? "开始闯关" : "下一关";
+    dom.resultUndo.hidden = !canUndo();
+    dom.resultUndo.textContent = game.undoUsed ? "撤回一步 ▶" : "免费撤回";
+    dom.resultShuffle.hidden = !canShuffle();
+    dom.retry.classList.toggle("primary", dom.next.hidden && dom.resultUndo.hidden);
+    dom.result.showModal();
+    const first = !dom.next.hidden ? dom.next : !dom.resultUndo.hidden ? dom.resultUndo : dom.retry;
+    first.focus({ preventScroll: true });
+  }
+
+  function renderRanking() {
+    dom.rankScope.textContent = (storageAvailable ? "本机成绩" : "本次打开的成绩") + " · 最高通关关卡";
+    const entries = profileStore.profiles.map(profile => ({
+      profile,
+      score: profile.bestStage
+    })).filter(entry => entry.score > 0 || entry.profile.id === activeId)
+      .sort((a, b) => b.score - a.score || a.profile.name.localeCompare(b.profile.name, "zh-Hans"));
+
+    let rank = 0;
+    dom.rankList.replaceChildren(...entries.map(({ profile, score }, i) => {
+      if (score !== entries[i - 1]?.score) rank = i + 1;
+      const row = document.createElement("li");
+      row.className = "rank-row";
+      row.dataset.current = String(profile.id === activeId);
+      const position = document.createElement("span");
+      position.className = "rank-index";
+      position.textContent = score > 0 ? rank : "–";
+      const person = document.createElement("span");
+      person.className = "rank-person";
+      const name = document.createElement("strong");
+      name.textContent = profile.name;
+      const region = document.createElement("small");
+      region.className = "rank-region";
+      region.textContent = profile.networkRegion ||
+        (profile.id === activeId && regionPending ? "识别地区中…" : "地区未知");
+      const result = document.createElement("span");
+      result.className = "rank-score";
+      result.textContent = score === 0 ? "待上榜" : "第 " + score + " 关";
+      person.append(name, region);
+      row.append(position, person, result);
+      return row;
+    }));
+    dom.rankEmpty.textContent = entries[0]?.score > 0 ? "" : "通关后会记录成绩。";
+    dom.rankEmpty.hidden = !dom.rankEmpty.textContent;
+  }
+
+  function renderProfileSettings() {
+    const player = activeProfile();
+    dom.profilePicker.replaceChildren(...profileStore.profiles.map(profile => {
+      const option = document.createElement("option");
+      option.value = profile.id;
+      option.textContent = profile.name;
+      return option;
+    }));
+    dom.profilePicker.value = player.id;
+    dom.profileName.value = player.name;
+    dom.profileFeedback.textContent = "";
+  }
+
+  function switchProfile(id) {
+    if (id === activeId) return;
+    activeId = id;
+    profileStore.activeId = id;
+    persistProfiles();
+    mainRound = null;
+    resumeMain();
+    void refreshNetworkRegion();
+    renderRanking();
+    renderProfileSettings();
+  }
+
+  function playSound(kind) {
+    if (!soundEnabled || !audioContext || audioContext.state !== "running") return;
+    const notes = kind === "match" ? [520, 780] : kind === "lost" ? [230, 145] : [340];
+    notes.forEach((frequency, i) => {
+      const start = audioContext.currentTime + i * .065;
+      const tone = audioContext.createOscillator();
+      const volume = audioContext.createGain();
+      tone.type = "triangle";
+      tone.frequency.setValueAtTime(frequency, start);
+      volume.gain.setValueAtTime(.001, start);
+      volume.gain.exponentialRampToValueAtTime(.085, start + .009);
+      volume.gain.exponentialRampToValueAtTime(.001, start + .095);
+      tone.connect(volume);
+      volume.connect(audioContext.destination);
+      tone.start(start);
+      tone.stop(start + .1);
+    });
+  }
+
+  function chooseRack(index) {
+    if (busy || !game.secondRack || game.phase !== "playing" || game.rackChoice === index) return;
+    game.rackChoice = index;
+    render();
+  }
+
+  const lanes = Array.from({ length: 10 }, (_, index) => {
+    const lane = document.createElement("div");
+    lane.className = "lane";
+    lane.innerHTML =
+      '<span class="lane-count" aria-hidden="true"></span>' +
+      '<button class="lane-count shift-button" type="button" hidden><span>↻</span><span></span></button>' +
+      '<div class="lane-track">' +
+      '<div class="part-cell" aria-hidden="true"></div><div class="part-cell" aria-hidden="true"></div>' +
+      '<button class="pickup" type="button"></button></div>';
+    const pickup = lane.querySelector(".pickup");
+    const shift = lane.querySelector(".shift-button");
+    pickup.addEventListener("click", () => take(index));
+    shift.addEventListener("click", () => shiftLane(index));
+    dom.lanes.append(lane);
+    return {
+      element: lane,
+      count: lane.querySelector(".lane-count"),
+      shift,
+      track: lane.querySelector(".lane-track"),
+      preview: [...lane.querySelectorAll(".part-cell")],
+      pickup
+    };
+  });
+
+  dom.main.addEventListener("click", () => {
+    if (game.testing || game.phase !== "playing") resumeMain();
+  });
+  dom.rackSelectors.forEach((button, index) => button.addEventListener("click", () => chooseRack(index)));
+  dom.openHelp.addEventListener("click", () => {
+    if (!busy) dom.help.showModal();
+  });
+  dom.openStagePicker.addEventListener("click", () => {
+    if (busy) return;
+    dom.stageNumber.value = game.layout.stage || activeProfile().bestStage + 1;
+    dom.stageReturn.hidden = !game.testing;
+    dom.stageMode.value = game.testing ? game.layout.mode : "";
+    dom.stagePicker.showModal();
+    dom.stageNumber.focus();
+    dom.stageNumber.select();
+  });
+  dom.stageForm.addEventListener("submit", event => {
+    event.preventDefault();
+    const stage = dom.stageNumber.valueAsNumber;
+    if (!dom.stageNumber.checkValidity()) return;
+    dom.stagePicker.close();
+    start(campaignLayout(stage, dom.stageMode.value), true, true);
+  });
+  dom.stageReturn.addEventListener("click", () => {
+    dom.stagePicker.close();
+    resumeMain();
+  });
+  dom.replayTutorial.addEventListener("click", () => {
+    dom.help.close();
+    start(campaignLayout(0), true);
+  });
+  dom.guideSkip.addEventListener("click", () => {
+    updateProfile(() => ({ tutorialDone: true }));
+    start(campaignLayout(activeProfile().bestStage + 1), true);
+  });
+  dom.openRank.addEventListener("click", () => {
+    if (busy) return;
+    refreshProfiles();
+    void refreshNetworkRegion();
+    renderRanking();
+    renderProfileSettings();
+    dom.profileSettings.open = false;
+    dom.leaderboard.showModal();
+  });
+  dom.profilePicker.addEventListener("change", () => {
+    const id = dom.profilePicker.value;
+    refreshProfiles();
+    if (profileStore.profiles.some(profile => profile.id === id)) switchProfile(id);
+  });
+  dom.newProfile.addEventListener("click", () => {
+    refreshProfiles();
+    const profile = makeProfile(profileStore.profiles);
+    profileStore.profiles.push(profile);
+    switchProfile(profile.id);
+    dom.profileName.focus();
+    dom.profileName.select();
+  });
+  dom.profileName.addEventListener("input", () => dom.profileName.setCustomValidity(""));
+  dom.profileForm.addEventListener("submit", event => {
+    event.preventDefault();
+    const name = dom.profileName.value.trim();
+    const key = value => value.normalize("NFKC").toLowerCase();
+    refreshProfiles();
+    const taken = profileStore.profiles.some(profile => profile.id !== activeId && key(profile.name) === key(name));
+    if (!name || taken) {
+      dom.profileName.setCustomValidity(name ? "这个临时用户名已经有人使用。" : "请输入临时用户名。");
+      dom.profileName.reportValidity();
+      return;
+    }
+    updateProfile(() => ({ name }));
+    renderRanking();
+    renderProfileSettings();
+    dom.profileFeedback.textContent = "资料已保存。";
+  });
+  dom.sound.addEventListener("click", async () => {
+    if (soundEnabled) {
+      soundEnabled = false;
+    } else {
+      const Audio = window.AudioContext || window.webkitAudioContext;
+      if (!Audio) {
+        dom.sound.textContent = "音效不可用";
+        dom.sound.disabled = true;
+        return;
+      }
+      try {
+        audioContext ??= new Audio();
+        await audioContext.resume();
+        soundEnabled = true;
+        playSound("match");
+      } catch {
+        soundEnabled = false;
+      }
+    }
+    dom.sound.setAttribute("aria-pressed", String(soundEnabled));
+  });
+  function restart() {
+    start(game.layout, true, game.testing);
+  }
+
+  dom.restart.addEventListener("click", restart);
+  dom.undo.addEventListener("click", undo);
+  dom.shuffle.addEventListener("click", shuffleRemaining);
+  dom.rewardSkip.addEventListener("click", () => closeReward(false));
+  dom.rewardClaim.addEventListener("click", () => closeReward(true));
+  dom.reward.addEventListener("cancel", event => {
+    event.preventDefault();
+    closeReward(false);
+  });
+  dom.retry.addEventListener("click", restart);
+  dom.next.addEventListener("click", () => {
+    const stage = game.layout.stage || activeProfile().bestStage;
+    start(campaignLayout(stage + 1), true, game.testing);
+  });
+  dom.resultUndo.addEventListener("click", undo);
+  dom.resultShuffle.addEventListener("click", shuffleRemaining);
+  dom.resultBack.addEventListener("click", () => {
+    dom.result.close();
+    dom.main.focus({ preventScroll: true });
+  });
+
+  resumeMain();
+  const repositionGuide = () => placeGuide();
+  window.addEventListener("resize", repositionGuide);
+  window.addEventListener("scroll", repositionGuide, { passive: true });
+  if (typeof ResizeObserver === "function") {
+    const guideResize = new ResizeObserver(repositionGuide);
+    guideResize.observe(document.querySelector(".screen"));
+    guideResize.observe(dom.guideCard);
+  }
+</script>
+</body>
+</html>

@@ -197,11 +197,14 @@
   /* ============ 卡片网格 ============ */
   .cards{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    grid-template-columns:repeat(2,minmax(0,1fr));
     gap:clamp(14px,1.8vw,22px);
     margin-top:auto;
     padding-bottom:clamp(28px,5vh,52px);
   }
+
+  /* 第 5 张卡（小游戏）横跨两列，作为重点展示 */
+  .card.is-wide{grid-column:1 / -1}
 
   .card{
     /* 每个卡片由 data-brand 提供自己的主色 */
@@ -357,6 +360,12 @@
   .card[data-brand="lingo"]{ --brand:#4f7cff; --brand-rgb:79,124,255; }
   /* Lingo 图标本身是彩色位图，自带蓝绿，无需着色 */
 
+  /* 零件分拣站：暖橙（区分于其余冷色系） */
+  .card[data-brand="game"]{ --brand:#e8894a; --brand-rgb:232,137,74; }
+
+  /* 宽卡内部改为左右排布，避免说明文字过宽 */
+  .card.is-wide .d{max-width:62ch}
+
   /* 底部 */
   .foot{
     display:flex;flex-direction:column;justify-content:center;align-items:center;
@@ -494,6 +503,25 @@
       <div class="t">Lingo实时翻译APP</div>
       <div class="s">Android App · v4.1.4</div>
       <div class="d">实时语音翻译 App：对着说话即时翻译，出国旅行、跨语言交流用。页面内有 APK 直接下载。</div>
+      <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span>
+    </a>
+
+    <a class="card is-wide" href="/sorting-station/" data-brand="game" data-i="4">
+      <span class="edge"></span>
+      <span class="num">05</span>
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7h13"/>
+          <path d="M16 7h5"/>
+          <circle cx="8" cy="7" r="1.6"/>
+          <circle cx="13" cy="7" r="1.6"/>
+          <rect x="4" y="13" width="7" height="7" rx="1.6"/>
+          <rect x="13" y="13" width="7" height="7" rx="1.6"/>
+        </svg>
+      </div>
+      <div class="t">零件分拣站</div>
+      <div class="s">Web Game · 浏览器小游戏</div>
+      <div class="d">一款传送带分拣休闲游戏：点取件口取下零件，新来的只跟暂存架最右端配对，清空传送带即过关——配错或急单超时会结束本轮。含测试选关与玩家排行，手机电脑都能玩，打开即玩无需安装。</div>
       <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span>
     </a>
 
